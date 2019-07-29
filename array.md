@@ -109,7 +109,9 @@ public class Solution {
 
 ## 136. Single Number
 
-https://leetcode-cn.com/problems/single-number/
+Easy https://leetcode-cn.com/problems/single-number/
+
+Given a non-empty array of integers, every element appears **twice** except for one. Find that single one.
 
 ```java
 public class Solution {
@@ -131,9 +133,9 @@ public class Solution {
 
 ## 137. Single Number II
 
-medium https://leetcode-cn.com/problems/single-number-ii/
+Medium https://leetcode-cn.com/problems/single-number-ii/
 
-Given a non-empty array of integers, every element appears three times except for one, which appears exactly once. Find that single one.
+Given a non-empty array of integers, every element appears **three times** except for one, which appears exactly once. Find that single one.
 
 Version 1 模拟三进制 时间 O(n) 空间 O(1)
 
@@ -192,25 +194,43 @@ public class Solution {
 
 ## 260. Single Number III
 
-medium https://leetcode-cn.com/problems/single-number-iii/
+Medium https://leetcode-cn.com/problems/single-number-iii/
 
-Given an array of numbers `nums`, in which exactly two elements appear only once and all the other elements appear exactly **twice**. Find the two elements that appear only once.
+Given an array of numbers `nums`, in which exactly two elements appear only **once** and all the other elements appear exactly **twice**. Find the two elements that appear only once.
 
 Version 1 时间复杂度O(N) 空间复杂度O(1)
 
+```python
+class Solution:
+    def singleNumber(self, nums: List[int]) -> List[int]:
+        xor = 0;
+        for num in nums:
+            xor ^= num
+        xor = xor & ~(xor - 1)
+        arr1, arr2 = [], []
+        for num in nums:
+            if xor & num == 0:
+                arr1.append(num)
+            else:
+                arr2.append(num)
+        num1, num2 = 0, 0
+        for num in arr1:
+            num1 ^= num
+        for num in arr2:
+            num2 ^= num
+        return [num1, num2]
+```
 
 ## 169. Majority Element
 
 Easy https://leetcode-cn.com/problems/majority-element/
 
+Given an array of size `n`, find the majority element. The majority element is the element that appears more than `⌊ n/2 ⌋` times.
+
 Versoion 1 时间 O(n) 空间 O(1)
 
 ```java
 public class Solution {
-    /**
-     * @param nums: a list of integers
-     * @return: find a  majority number
-     */
     public int majorityNumber(ArrayList<Integer> nums) {
         // 2015-09-07 不同的数相互抵消，剩下majority number
         int count = 0;
@@ -235,6 +255,8 @@ public class Solution {
 ## 229. Majority Element II
 
 Medium https://leetcode-cn.com/problems/majority-element-ii/
+
+Given an integer array of size n, find all elements that appear more than `⌊ n/3 ⌋` times.
 
 ```java
 public class Solution {

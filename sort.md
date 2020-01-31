@@ -1,5 +1,7 @@
 # sort
 
+[toc]
+
 ## 912. Sort an Array
 
 https://leetcode-cn.com/problems/sort-an-array/
@@ -100,6 +102,16 @@ def insertion_sort(nums):
 
     return nums
 ```
+
+### Heap Sort
+
+https://www.youtube.com/watch?v=j-DqQcNPGbE
+
+heap:
+1. complete binary tree
+1. parent > children
+
+heapify, 是一个树变成 heap
 
 ---
 

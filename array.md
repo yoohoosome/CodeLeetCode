@@ -67,11 +67,11 @@ public class Solution {
 }
 ```
 
-## 15. 3Sum
+## 15.3 Sum
 
 Medium https://leetcode-cn.com/problems/3sum/
 
-Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? 
+Given an array nums of n integers, are there elements a, b, c in nums such that `a + b + c = 0`? 
 
 Find **all** unique triplets in the array which gives the sum of zero.
 

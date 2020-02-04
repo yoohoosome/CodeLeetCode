@@ -1,6 +1,14 @@
 # Binary Search
 
+[toc]
+
+## csdn
+
 https://blog.csdn.net/willshine19/article/category/3088525
+
+## 所有题目
+
+https://leetcode-cn.com/tag/binary-search/
 
 ## First Position of Target
 
@@ -82,12 +90,11 @@ class Solution {
 }
 ```
 
+python
+
 ```python
 
 class Solution:
-    # @param nums: The integer array
-    # @param target: Target number to find
-    # @return the first position of target in nums, position start from 0 
     def binarySearch(self, nums, target):
         if len(nums) == 0:
             return -1
@@ -108,11 +115,47 @@ class Solution:
 
 ```
 
+go
 
+```go
+func binarySearch(nums []int, target int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+    
+    var left = 0
+    var right = len(nums) - 1
+    
+    if nums[left] >= target {
+        return left
+    }
+    if nums[right] < target {
+        return right + 1
+    }
+    
+    for left < right - 1 {
+        var mid = (left + right) / 2
+        if nums[mid] == target {
+            return mid
+        } else if nums[mid] > target {
+            right = mid
+        } else {
+            left = mid
+        }
+    }
+    
+    if nums[left] == target {
+        return left
+    } else if nums[right] == target {
+        return right
+    } else {
+        return right
+    }
+}
+```
 
-## Search Insert Position
+## 35. 搜索插入位置
 
-https://www.lintcode.com/problem/search-insert-position/description
 https://leetcode-cn.com/problems/search-insert-position/
 
 Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
@@ -156,43 +199,30 @@ public class Solution {
  
 ```
 
-```go
-func searchInsert(nums []int, target int) int {
-    if len(nums) == 0 {
-        return 0
-    }
-    
-    var left = 0
-    var right = len(nums) - 1
-    
-    if nums[left] >= target {
-        return left
-    }
-    if nums[right] < target {
-        return right + 1
-    }
-    
-    
-    for left < right - 1 {
-        var mid = (left + right) / 2
-        if nums[mid] == target {
-            return mid
-        } else if nums[mid] > target {
-            right = mid
-        } else {
-            left = mid
-        }
-    }
-    
-    if nums[left] == target {
-        return left
-    } else if nums[right] == target {
-        return right
-    } else {
-        return right
-    }
-}
+python
 
+```python
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        if not nums: return -1
+        n = len(nums)
+        left, right = 0, n - 1
+
+        while left + 1 < right:
+            mid = (left + right) // 2
+            if nums[mid] < target:
+                left = mid
+            elif nums[mid] > target:
+                right = mid
+            else:
+                return mid
+        
+        if nums[left] >= target:
+            return left
+        elif nums[right] >= target:
+            return right
+        else:
+            return right + 1
 ```
 
 ## Search for a Range
@@ -308,21 +338,22 @@ class Solution:
         return [first, last]
 ```
 
+## 74. Search a 2D Matrix
 
-## Search a 2D Matrix
+https://leetcode-cn.com/problems/search-a-2d-matrix/
 
 Integers in each row are sorted from left to right.
 The first integer of each row is greater than the last integer of the previous row.
-
-https://www.lintcode.com/problem/search-a-2d-matrix/description
+```
+matrix = [
+  [1,   3,  5,  7],
+  [10, 11, 16, 20],
+  [23, 30, 34, 50]
+]
+```
 
 ```java
 public class Solution {
-    /**
-     * @param matrix, a list of lists of integers
-     * @param target, an integer
-     * @return a boolean, indicate whether matrix contains target
-     */
     public boolean searchMatrix(int[][] matrix, int target) {
         // 2015-4-11 binary search
         // 注意矩阵的表示方法
@@ -357,25 +388,64 @@ public class Solution {
         return false;
     }
 }
- 
 ```
 
-## Search a 2D Matrix II
+```python
+'''
+2020.2.3
+时间 O(nlogn)
+'''
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        if not matrix: return False
+        nr = len(matrix)
+        if nr == 0: return False;
+        nc = len(matrix[0])
+        if nc == 0: return False;
+
+        left, right = 0, nr * nc - 1
+
+        def getValue(index):
+            return matrix[index // nc][index % nc]
+
+        while left + 1 < right:
+            mid = (left + right) // 2
+            if getValue(mid) < target:
+                left = mid
+            elif getValue(mid) > target:
+                right = mid
+            else:
+                return mid
+        
+        if getValue(left) == target:
+            return True
+        elif getValue(right) == target:
+            return True
+        else:
+            return False
+```
+ 
+## 240. Search a 2D Matrix II
+
+https://leetcode-cn.com/problems/search-a-2d-matrix-ii/
 
 Integers in each row are sorted from left to right.
 Integers in each column are sorted from up to bottom.
 No duplicate integers in each row or column.
 
-https://www.lintcode.com/problem/search-a-2d-matrix-ii/description
+```
+[
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]
+]
+```
 
 
 ```java
 public class Solution {
-    /**
-     * @param matrix: A list of lists of integers
-     * @param target: An integer you want to search in matrix
-     * @return: An integer indicate the total occurrence of target in the given matrix
-     */
     public int searchMatrix(int[][] matrix, int target) {
         // 2019.6.30 O(m*n)
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
@@ -401,11 +471,6 @@ public class Solution {
 
 ```java
 public class Solution {
-    /**
-     * @param matrix: A list of lists of integers
-     * @param target: An integer you want to search in matrix
-     * @return: An integer indicate the total occurrence of target in the given matrix
-     */
     public int searchMatrix(int[][] matrix, int target) {
         // 2019.6.30 O(m+n)
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {

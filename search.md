@@ -5,8 +5,10 @@
 
 题目 | 提示
 --|--
-46. 全排列 |
-47. 全排列 II | 思考一下，为什么造成了重复，如何在搜索之前就判断这一支会产生重复，从而“剪枝”。
+46. 全排列 | [1,2,3] 给出所有排列
+47. 全排列 II | [1,2,2] 给出所有排列, 为什么造成了重复，如何在搜索之前就判断这一支会产生重复，从而“剪枝”。
+78. 子集 | [1,2,3] 给出所有子集, 为数不多的，解不在叶子结点上的回溯搜索问题。解法比较多，注意对比。
+90. 子集 II | [1,2,2] 给出所有子集 剪枝技巧同 47 题、39 题、40 题。
 17. 电话号码的字母组合 |
 22. 括号生成 | 这是字符串问题，没有显式回溯的过程。这道题广度优先遍历也很好写，可以通过这个问题理解一下为什么回溯算法都是深度优先遍历，并且都用递归来写。
 39. 组合总和 | 使用题目给的示例，画图分析。
@@ -14,9 +16,7 @@
 51. N皇后 | 其实就是全排列问题，注意设计清楚状态变量。
 60. 第k个排列 | 利用了剪枝的思想，减去了大量枝叶，直接来到需要的叶子结点。
 77. 组合 | 组合问题按顺序找，就不会重复。并且举一个中等规模的例子，找到如何剪枝，这道题思想不难，难在编码。
-78. 子集 | 为数不多的，解不在叶子结点上的回溯搜索问题。解法比较多，注意对比。
 79. 单词搜索 |
-90. 子集 II | 剪枝技巧同 47 题、39 题、40 题。
 93. 复原IP地址 | 	
 784. 字母大小写全排列 |	
 
@@ -25,8 +25,12 @@
 https://blog.csdn.net/willshine19/category_5631635.html
 
 
+### 46 全排列 Permutations
 
-Permutations
+https://leetcode-cn.com/problems/permutations/
+
+给定一个没有重复数字的序列，返回其所有可能的全排列。
+
 ```java
 class Solution {
     /**
@@ -67,7 +71,47 @@ class Solution {
 }
 ```
 
+
+```python
+'''
+46. 全排列
+https://leetcode-cn.com/problems/permutations/
+回溯搜索 dfs
+'''
+
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return []
+        if len(nums) == 1: return [nums]
+
+        res = []
+        for i in range(len(nums)):
+            for rest in self.permute(nums[:i] + nums[i+1:]):
+                res.append([nums[i]] + rest)
+        return res
+```
+
+
+### 47. 全排列 II
 Permutations II
+
+https://leetcode-cn.com/problems/permutations-ii/
+
+```python
+'''
+排序 + dfs
+'''
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        if len(nums) == 1: return [nums]
+        nums.sort()
+        res = []
+        for i in range(len(nums)):
+            if i > 0 and nums[i - 1] == nums[i]: continue
+            for rest in self.permuteUnique(nums[:i] + nums[i+1:]):
+                res.append([nums[i]] + rest)
+        return res
+```
 
 ```java
 class Solution {
@@ -120,10 +164,28 @@ class Solution {
 ```
 
 
-78. 子集
+78. 子集 Subsets
+
 https://leetcode-cn.com/problems/subsets/
 
-Subsets
+
+```python
+'''
+2020.2.6
+'''
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return [[]]
+        n = len(nums)
+        res = []
+        def helper(lst, pos):
+            res.append(lst)
+            for i in range(pos, n):
+                # lst + [nums[i]] 的目的是创建一个新的 list
+                helper(lst + [nums[i]], i + 1)
+        helper([], 0)
+        return res
+```
 
 ```java
 class Solution {
@@ -193,9 +255,10 @@ class Solution {
     }
 }
 ```
-90. 子集 II
+
+90. 子集 II Subsets II
+
 https://leetcode-cn.com/problems/subsets-ii/
-Subsets II
 
 ```java
 

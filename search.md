@@ -31,6 +31,8 @@ https://leetcode-cn.com/problems/permutations/
 
 给定一个没有重复数字的序列，返回其所有可能的全排列。
 
+JAVA 1
+
 ```java
 class Solution {
     /**
@@ -71,18 +73,40 @@ class Solution {
 }
 ```
 
+PY 1
+
+```python
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return [[]]
+        res = []
+
+        def helper(lst, ava):
+            if not ava: 
+                res.append(lst)
+                return
+                
+            for i, v in enumerate(ava):
+                helper(lst + [v], ava[:i] + ava[i+1:])
+        
+        helper([], nums)
+        return res
+
+```
+
 
 ```python
 '''
 46. 全排列
 https://leetcode-cn.com/problems/permutations/
-回溯搜索 dfs
+回溯搜索 分治?
 '''
 
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        if not nums: return []
+        if not nums: return [[]]
         if len(nums) == 1: return [nums]
+        # nums 保存未被使用的数
 
         res = []
         for i in range(len(nums)):
@@ -91,9 +115,35 @@ class Solution:
         return res
 ```
 
+```python
+'''
+2020.2.7
+回溯搜索 dfs
+'''
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return [[]]
+        res = []
 
-### 47. 全排列 II
-Permutations II
+
+        def helper(lst):
+            # lst 保存已经使用的数
+            if len(lst) == len(nums):
+                res.append(lst)
+                return
+            for v in nums:
+                if v not in lst: helper(lst + [v])
+        
+        helper([])
+        return res
+
+```
+
+
+
+
+
+### 47. 全排列 II Permutations II
 
 https://leetcode-cn.com/problems/permutations-ii/
 
@@ -169,23 +219,8 @@ class Solution {
 https://leetcode-cn.com/problems/subsets/
 
 
-```python
-'''
-2020.2.6
-'''
-class Solution:
-    def subsets(self, nums: List[int]) -> List[List[int]]:
-        if not nums: return [[]]
-        n = len(nums)
-        res = []
-        def helper(lst, pos):
-            res.append(lst)
-            for i in range(pos, n):
-                # lst + [nums[i]] 的目的是创建一个新的 list
-                helper(lst + [nums[i]], i + 1)
-        helper([], 0)
-        return res
-```
+
+JAVA 1
 
 ```java
 class Solution {
@@ -255,6 +290,47 @@ class Solution {
     }
 }
 ```
+
+PY 1
+
+```python
+'''
+2020.2.7
+'''
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return []
+        res = []
+
+        def helper(lst, available):
+            res.append(lst)
+
+            for i, v in enumerate(available):
+                helper(lst + [v], available[i + 1:])
+        
+        helper([], nums)
+        return res
+```
+
+```python
+'''
+2020.2.6
+'''
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return [[]]
+        n = len(nums)
+        res = []
+        def helper(lst, pos):
+            res.append(lst)
+            for i in range(pos, n):
+                # lst + [nums[i]] 的目的是创建一个新的 list
+                helper(lst + [nums[i]], i + 1)
+        helper([], 0)
+        return res
+```
+
+
 
 90. 子集 II Subsets II
 

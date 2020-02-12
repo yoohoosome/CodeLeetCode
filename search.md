@@ -2,22 +2,32 @@
 
 ![](https://pic.leetcode-cn.com/6a464ba95a7ad1c247aa39610535984c241e6b95148f8bc36b02908a190b1d54-image.png)
 
+解题要点
+
+1. 画树
+1. 每个节点包括 (1) 当前解 (2) 可用元素
+
+
 
 题目 | 提示
 --|--
-46. 全排列 | [1,2,3] 给出所有排列
-47. 全排列 II | [1,2,2] 给出所有排列, 为什么造成了重复，如何在搜索之前就判断这一支会产生重复，从而“剪枝”。
-78. 子集 | [1,2,3] 给出所有子集, 为数不多的，解不在叶子结点上的回溯搜索问题。解法比较多，注意对比。
-90. 子集 II | [1,2,2] 给出所有子集 剪枝技巧同 47 题、39 题、40 题。
+[46. 全排列](https://leetcode-cn.com/problems/permutations/) | [1,2,3] 给出所有排列
+[47. 全排列 II](https://leetcode-cn.com/problems/permutations-ii/) | [1,2,2] 给出所有排列, 为什么造成了重复，如何在搜索之前就判断这一支会产生重复，从而“剪枝”。
+[78. 子集](https://leetcode-cn.com/problems/subsets/) | [1,2,3] 给出所有子集 (解不在叶子结点上的回溯搜索问题)
+[90. 子集 II](https://leetcode-cn.com/problems/subsets-ii/) | [1,2,2] 给出所有子集 剪枝技巧同 47 题、39 题、40 题。
+[39. 组合总和](https://leetcode-cn.com/problems/combination-sum/) | candidates = [2,3,6,7], target = 7, 数字可以用多次
+[40. 组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/) | candidates = [10,1,2,7,6,1,5], target = 8, 数字只能用一次
+[51. N皇后](https://leetcode-cn.com/problems/n-queens/) | 其实就是全排列问题，注意设计清楚状态变量。
+[52. N皇后 II](https://leetcode-cn.com/problems/n-queens-ii/) |
+[131. 分割回文串](https://leetcode-cn.com/problems/palindrome-partitioning) |
 17. 电话号码的字母组合 |
 22. 括号生成 | 这是字符串问题，没有显式回溯的过程。这道题广度优先遍历也很好写，可以通过这个问题理解一下为什么回溯算法都是深度优先遍历，并且都用递归来写。
-39. 组合总和 | 使用题目给的示例，画图分析。
-40. 组合总和 II | 
-51. N皇后 | 其实就是全排列问题，注意设计清楚状态变量。
 60. 第k个排列 | 利用了剪枝的思想，减去了大量枝叶，直接来到需要的叶子结点。
 77. 组合 | 组合问题按顺序找，就不会重复。并且举一个中等规模的例子，找到如何剪枝，这道题思想不难，难在编码。
 79. 单词搜索 |
 93. 复原IP地址 | 	
+784. 字母大小写全排列 |	
+127. Word Ladder |	
 784. 字母大小写全排列 |	
 
 ## 题目
@@ -31,47 +41,6 @@ https://leetcode-cn.com/problems/permutations/
 
 给定一个没有重复数字的序列，返回其所有可能的全排列。
 
-JAVA 1
-
-```java
-class Solution {
-    /**
-     * @param nums: A list of integers.
-     * @return: A list of permutations.
-     */
-    public ArrayList<ArrayList<Integer>> permute(ArrayList<Integer> nums) {
-        // 2015-08-28
-        // nums不含重复元素，每个元素只可以使用一次
-        // 解集中不可以含重复解
-        ArrayList<ArrayList<Integer>> rst = new ArrayList<>();
-        if (nums == null || nums.size() == 0) {
-            return rst;
-        }
-        Collections.sort(nums);
-        ArrayList<Integer> list = new ArrayList<>();
-        helper(nums, rst, list);
-        return rst;
-    }
-    
-    private void helper(ArrayList<Integer> nums, 
-            ArrayList<ArrayList<Integer> rst, ArrayList<Integer> list) {
-        if (list.size() == nums.size()) {
-            rst.add(new ArrayList<Integer>(list));
-            return;
-        }    
-        
-        for (int i = 0; i < nums.size(); i++) {
-            if (list.contains(nums.get(i))) {
-                continue;
-            }
-            list.add(nums.get(i));
-            helper(nums, rst, list);
-            list.remove(list.size() - 1);
-        }
-        return;
-    }
-}
-```
 
 PY 1
 
@@ -148,6 +117,23 @@ class Solution:
 https://leetcode-cn.com/problems/permutations-ii/
 
 ```python
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return [[]]
+        nums.sort()
+        res = []
+
+        def helper(lst, ava):
+            if not ava: res.append(lst)
+            for i, v in enumerate(ava):
+                if i > 0 and ava[i - 1] == ava[i]: continue
+                helper(lst + [v], ava[:i] + ava[i+1:])
+        helper([], nums)
+        return res
+```
+
+
+```python
 '''
 排序 + dfs
 '''
@@ -214,11 +200,91 @@ class Solution {
 ```
 
 
+JAVA 1
+
+```java
+class Solution {
+    /**
+     * @param nums: A list of integers.
+     * @return: A list of permutations.
+     */
+    public ArrayList<ArrayList<Integer>> permute(ArrayList<Integer> nums) {
+        // 2015-08-28
+        // nums不含重复元素，每个元素只可以使用一次
+        // 解集中不可以含重复解
+        ArrayList<ArrayList<Integer>> rst = new ArrayList<>();
+        if (nums == null || nums.size() == 0) {
+            return rst;
+        }
+        Collections.sort(nums);
+        ArrayList<Integer> list = new ArrayList<>();
+        helper(nums, rst, list);
+        return rst;
+    }
+    
+    private void helper(ArrayList<Integer> nums, 
+            ArrayList<ArrayList<Integer> rst, ArrayList<Integer> list) {
+        if (list.size() == nums.size()) {
+            rst.add(new ArrayList<Integer>(list));
+            return;
+        }    
+        
+        for (int i = 0; i < nums.size(); i++) {
+            if (list.contains(nums.get(i))) {
+                continue;
+            }
+            list.add(nums.get(i));
+            helper(nums, rst, list);
+            list.remove(list.size() - 1);
+        }
+        return;
+    }
+}
+```
+
+
 78. 子集 Subsets
 
 https://leetcode-cn.com/problems/subsets/
 
+PY 1
 
+```python
+'''
+2020.2.7
+'''
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return []
+        res = []
+
+        def helper(lst, available):
+            res.append(lst)
+
+            for i, v in enumerate(available):
+                helper(lst + [v], available[i + 1:])
+        
+        helper([], nums)
+        return res
+```
+
+```python
+'''
+2020.2.6
+'''
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return [[]]
+        n = len(nums)
+        res = []
+        def helper(lst, pos):
+            res.append(lst)
+            for i in range(pos, n):
+                # lst + [nums[i]] 的目的是创建一个新的 list
+                helper(lst + [nums[i]], i + 1)
+        helper([], 0)
+        return res
+```
 
 JAVA 1
 
@@ -291,50 +357,26 @@ class Solution {
 }
 ```
 
-PY 1
+90. 子集 II Subsets II
+
+https://leetcode-cn.com/problems/subsets-ii/
 
 ```python
-'''
-2020.2.7
-'''
 class Solution:
-    def subsets(self, nums: List[int]) -> List[List[int]]:
-        if not nums: return []
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        if not nums: return [[]]
+        nums.sort()
         res = []
 
-        def helper(lst, available):
+        def helper(lst, ava):
             res.append(lst)
-
-            for i, v in enumerate(available):
-                helper(lst + [v], available[i + 1:])
+            for i, v in enumerate(ava):
+                if i > 0 and ava[i - 1] == ava[i]: continue
+                helper(lst + [v], ava[i + 1:])
         
         helper([], nums)
         return res
 ```
-
-```python
-'''
-2020.2.6
-'''
-class Solution:
-    def subsets(self, nums: List[int]) -> List[List[int]]:
-        if not nums: return [[]]
-        n = len(nums)
-        res = []
-        def helper(lst, pos):
-            res.append(lst)
-            for i in range(pos, n):
-                # lst + [nums[i]] 的目的是创建一个新的 list
-                helper(lst + [nums[i]], i + 1)
-        helper([], 0)
-        return res
-```
-
-
-
-90. 子集 II Subsets II
-
-https://leetcode-cn.com/problems/subsets-ii/
 
 ```java
 
@@ -374,3 +416,434 @@ class Solution {
     }
 }
 ```
+
+39. 组合总和
+
+https://leetcode-cn.com/problems/combination-sum/submissions/
+
+```python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        if not candidates: return [[]]
+        candidates.sort()
+        res = []
+
+        def helper(lst, ava, sm):
+            if sm == target: res.append(lst)
+            if sm >= target: return
+            for i, v in enumerate(ava):
+                if sm + v > target: break
+                helper(lst + [v], ava[i:], sm + v)
+
+        helper([], candidates, 0)
+        return res 
+```
+
+```java
+public class Solution {
+    /**
+     * @param candidates: A list of integers
+     * @param target:An integer
+     * @return: A list of lists of integers
+     */
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        // 2015-08-28
+        // candicates中不含重复元素，元素可以重复使用
+        // 解集中不可以含相同解
+        List<List<Integer>> rst = new ArrayList<List<Integer>>();
+        if (candidates == null || candidates.length == 0) {
+            return rst;
+        }
+        
+        List<Integer> list = new ArrayList<>();
+        Arrays.sort(candidates);
+        helper(candidates, rst, list, target, 0);
+        return rst;     
+    }
+    
+    private void helper(int[] candidates, List<List<Integer>> rst, List<Integer> list,
+            int left, int pos) {
+        if (left == 0) {
+            rst.add(new ArrayList<Integer>(list));
+            return;
+        }
+        
+        for (int i = pos; i < candidates.length; i++) {
+            if (left - candidates[i] < 0) {
+                break;
+            }
+            list.add(candidates[i]);
+            helper(candidates, rst, list, left - candidates[i], i);
+            list.remove(list.size() - 1);
+        }
+    }
+}
+```
+
+40. 组合总和 II
+
+https://leetcode-cn.com/problems/combination-sum-ii/
+
+```python
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        if not candidates: return [[]]
+        candidates.sort()
+        res = []
+        
+        def helper(lst, ava, sm):
+            if sm == target: 
+                res.append(lst)
+                return
+            for i, v in enumerate(ava):
+                if v + sm > target: break
+                if i > 0 and ava[i - 1] == ava[i]: continue
+                helper(lst + [v], ava[i + 1:], sm + v)
+        
+        helper([], candidates, 0)
+        return res
+                
+```
+
+```java
+public class Solution {
+    /**
+     * @param num: Given the candidate numbers
+     * @param target: Given the target number
+     * @return: All the combinations that sum to target
+     */
+    public List<List<Integer>> combinationSum2(int[] num, int target) {
+        // 2015-07-09
+        // num中可以含重复元素，每个元素只能使用一次
+        // 解集中不可以含相同的解
+        List<List<Integer>> rst = new ArrayList<List<Integer>>();
+        if (num == null || num.length == 0) {
+            return rst;
+        }
+        Arrays.sort(num);
+        ArrayList<Integer> list = new ArrayList<>();
+        helper(rst, list, num, target, 0);
+        return rst;
+    }
+    
+    private void helper(List<List<Integer>> rst, ArrayList<Integer> list, int[] num, int t, int pos) {
+        if (t == 0) {
+            rst.add(new ArrayList<Integer>(list));
+            return;
+        }
+        for (int i = pos; i < num.length; i++) {
+            if (t - num[i] < 0) {
+                break;
+            }
+            if (i != pos && num[i] == num[i - 1]) { // 关键：注意是pos
+                continue;
+            }
+            list.add(num[i]);
+            helper(rst, list, num, t - num[i], i + 1);
+            list.remove(list.size() - 1);
+        }
+        return;
+    }
+}
+```
+
+## N-Queens
+
+51. N皇后
+    
+https://leetcode-cn.com/problems/n-queens/
+
+```python
+'''
+2020.2.11
+'''
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        if not n: return [[]]
+        res = []
+
+        def isValid(lst, c):
+            r = len(lst)
+            for rq, cq in enumerate(lst):
+                if cq == c: return False
+                if cq + rq == c + r: return False
+                if cq - rq == c - r: return False
+            return True
+        
+        def toString(lst):
+            queens = []
+            for c in lst:
+                queens.append('.' * c + 'Q' + '.' * (n - c - 1))
+            return queens
+
+        def helper(lst):
+            if len(lst) == n: 
+                res.append(toString(lst))
+                return
+
+            for c in range(n):
+                if isValid(lst, c): helper(lst + [c])
+
+        helper([])
+        return res
+
+```
+
+```java
+class Solution {
+    /**
+     * Get all distinct N-Queen solutions
+     * @param n: The number of queens
+     * @return: All distinct solutions
+     * For example, A string '...Q' shows a queen on forth position
+     */
+    ArrayList<ArrayList<String>> solveNQueens(int n) {
+        // 2015-07-07
+        ArrayList<ArrayList<String>> rst = new ArrayList<>();
+        if (n == 0) {
+            return rst;
+        }
+        ArrayList<Integer> list = new ArrayList<>();
+        helper(rst, list, n);
+        return rst;
+    }
+    
+    private void helper(ArrayList<ArrayList<String>> rst, ArrayList<Integer> list ,int n) {
+        // 控制树的深度
+        if (list.size() == n) {
+            rst.add(convert(list));
+            return;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            // 控制分支
+            if (!isValid(list, i)) {
+                continue;
+            }
+            list.add(i);
+            helper(rst, list, n);
+            list.remove(list.size() - 1);
+        }
+        return;
+    }
+    
+    // 将数组转为string组
+    private ArrayList<String> convert(ArrayList<Integer> list) {
+        ArrayList<String> rst = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            String s = new String("");
+            for (int j = 0; j < list.size(); j++) {
+                if (j == list.get(i)) {
+                    s += "Q";
+                } else {
+                    s += ".";
+                }
+            }
+            rst.add(s);
+        }
+        return rst;
+    }
+    
+    // 判断是queen是否可以相互攻击
+    private boolean isValid(ArrayList<Integer> list, int k) {
+        if (list.size() == 0) {
+            return true;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == k) {
+                return false;
+            }
+            if (list.get(i) - i == k - list.size()) {
+                return false;
+            }
+            if (list.get(i) + i == k + list.size()) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+```
+
+
+52. N皇后 II
+
+https://leetcode-cn.com/problems/n-queens-ii/
+
+```java
+class Solution {
+    /**
+     * Calculate the total number of distinct N-Queen solutions.
+     * @param n: The number of queens.
+     * @return: The total number of distinct solutions.
+     */
+    public static int sum;
+        
+    public int totalNQueens(int n) {
+        sum = 0;
+        ArrayList<Integer> list = new ArrayList<>();
+        helper(list, n);
+        return sum;
+    }
+    
+    /**
+     * 递归方法
+     * @param list : 已确定的queen的位置
+     * @param n : queen的总个数
+     */
+    private void helper(ArrayList<Integer> list, int n) {  
+        // 退出条件，控制树的深度  
+        if (list.size() == n) {  
+            sum++;  // 找到一个解
+            return;  
+        }  
+          
+        for (int i = 0; i < n; i++) {  
+            // 控制分支  
+            if (!isValid(list, i)) {  
+                continue;  
+            }  
+            list.add(i);  
+            helper(list, n);  
+            list.remove(list.size() - 1);  
+        }  
+        return;  
+    }  
+    
+    /**
+     * 判断是queen是否可以相互攻击
+     * @param list : 已确定的queen的位置
+     * @param col : 新的一行中queen的位置
+     */
+    private boolean isValid(ArrayList<Integer> list, int col) {  
+        if (list.size() == 0) {  
+            return true;  
+        }  
+        for (int i = 0; i < list.size(); i++) {  
+            if (list.get(i) == col) {  
+                return false;  
+            }  
+            // 列 - 行
+            if (list.get(i) - i == col - list.size()) {  
+                return false;  
+            }  
+            // 列 + 行
+            if (list.get(i) + i == col + list.size()) {  
+                return false;  
+            }  
+        }  
+        return true;  
+    }  
+};
+```
+
+## todo
+
+https://blog.csdn.net/willshine19/article/details/48129521
+
+
+
+
+131. 分割回文串
+
+https://leetcode-cn.com/problems/palindrome-partitioning/
+
+https://blog.csdn.net/willshine19/article/details/46808075
+
+```
+
+   a a b
+   |      |
+[a] a b  [aa] b
+   |      |
+[a,a] b  [aa,b]
+   |      
+[a,a,b]
+
+```
+
+```python
+class Solution:
+    def partition(self, s: str) -> List[List[str]]:
+        res = []
+
+        def helper(lst, ava):
+            if not ava: res.append(lst)
+
+            for i, v in enumerate(ava):
+                nxt = ava[:i + 1]
+                if nxt == nxt[::-1]:
+                    helper(lst + [nxt], ava[i + 1:])
+        
+        helper([], s)
+        return res
+
+```
+
+```java
+public class Solution {
+    /**
+     * @param s: A string
+     * @return: A list of lists of string
+     */
+    public List<List<String>> partition(String s) {
+        // 2015-07-08
+        List<List<String>> rst = new ArrayList<List<String>>();
+        if (s == null || s.length() == 0) {
+            return rst;
+        }
+        ArrayList<String> list = new ArrayList<>();
+        
+        helper(rst, list, s, 0);
+        return rst;
+    }
+    
+    // 注意第一个参数的类型
+    private void helper(List<List<String>> rst, ArrayList<String> list, String s, int pos) {
+        if (pos == s.length()) {
+            rst.add(new ArrayList<String>(list));
+            return;
+        }
+        
+        for (int i = pos + 1; i <= s.length(); i++) { //注意是<=
+            if (!isPalindrome(s.substring(pos, i))) {
+                continue;
+            }
+            list.add(s.substring(pos, i));
+            helper(rst, list, s, i);
+            list.remove(list.size() - 1);
+        }
+        return;
+    }
+    
+    private boolean isPalindrome(String s) {
+        if (s.length() == 0) {
+            return true;
+        }
+        int start = 0;
+        int end = s.length() - 1;
+        while (start < end) {
+            if (s.charAt(start) != s.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+}
+```
+
+---
+
+## 127. Word Ladder
+
+广度优先
+
+https://leetcode-cn.com/problems/word-ladder/
+
+https://leetcode-cn.com/problems/word-ladder-ii/
+
+https://blog.csdn.net/willshine19/article/details/46840853
+
+https://blog.csdn.net/willshine19/article/details/48104265

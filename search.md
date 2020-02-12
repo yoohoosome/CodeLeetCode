@@ -20,9 +20,9 @@
 [51. N皇后](https://leetcode-cn.com/problems/n-queens/) | 其实就是全排列问题，注意设计清楚状态变量。
 [52. N皇后 II](https://leetcode-cn.com/problems/n-queens-ii/) |
 [131. 分割回文串](https://leetcode-cn.com/problems/palindrome-partitioning) |
-17. 电话号码的字母组合 |
-22. 括号生成 | 这是字符串问题，没有显式回溯的过程。这道题广度优先遍历也很好写，可以通过这个问题理解一下为什么回溯算法都是深度优先遍历，并且都用递归来写。
-60. 第k个排列 | 利用了剪枝的思想，减去了大量枝叶，直接来到需要的叶子结点。
+[17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/) |
+[22. 括号生成](https://leetcode-cn.com/problems/generate-parentheses/) | 这是字符串问题，没有显式回溯的过程。这道题广度优先遍历也很好写，可以通过这个问题理解一下为什么回溯算法都是深度优先遍历，并且都用递归来写。
+[60. 第k个排列](https://leetcode-cn.com/problems/permutation-sequence/) | 利用了剪枝的思想，减去了大量枝叶，直接来到需要的叶子结点。
 77. 组合 | 组合问题按顺序找，就不会重复。并且举一个中等规模的例子，找到如何剪枝，这道题思想不难，难在编码。
 79. 单词搜索 |
 93. 复原IP地址 | 	
@@ -47,6 +47,7 @@ PY 1
 ```python
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
+        # 2020.2.10
         if not nums: return [[]]
         res = []
 
@@ -119,6 +120,7 @@ https://leetcode-cn.com/problems/permutations-ii/
 ```python
 class Solution:
     def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        # 2020.2.10
         if not nums: return [[]]
         nums.sort()
         res = []
@@ -364,6 +366,7 @@ https://leetcode-cn.com/problems/subsets-ii/
 ```python
 class Solution:
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        # 2020.2.12
         if not nums: return [[]]
         nums.sort()
         res = []
@@ -379,7 +382,6 @@ class Solution:
 ```
 
 ```java
-
 class Solution {
     /**
      * @param S: A set of numbers.
@@ -424,6 +426,7 @@ https://leetcode-cn.com/problems/combination-sum/submissions/
 ```python
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        # 2020.2.10
         if not candidates: return [[]]
         candidates.sort()
         res = []
@@ -487,6 +490,7 @@ https://leetcode-cn.com/problems/combination-sum-ii/
 ```python
 class Solution:
     def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        # 2020.1.10
         if not candidates: return [[]]
         candidates.sort()
         res = []
@@ -554,11 +558,9 @@ public class Solution {
 https://leetcode-cn.com/problems/n-queens/
 
 ```python
-'''
-2020.2.11
-'''
 class Solution:
     def solveNQueens(self, n: int) -> List[List[str]]:
+        # 2020.2.11
         if not n: return [[]]
         res = []
 
@@ -737,13 +739,6 @@ class Solution {
 };
 ```
 
-## todo
-
-https://blog.csdn.net/willshine19/article/details/48129521
-
-
-
-
 131. 分割回文串
 
 https://leetcode-cn.com/problems/palindrome-partitioning/
@@ -764,6 +759,7 @@ https://blog.csdn.net/willshine19/article/details/46808075
 
 ```python
 class Solution:
+    # 2020.2.11
     def partition(self, s: str) -> List[List[str]]:
         res = []
 
@@ -833,6 +829,67 @@ public class Solution {
     }
 }
 ```
+
+17. 电话号码的字母组合
+
+https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/
+
+```python
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        # 2020.2.12
+        mapping = {"2": "abc",
+        "3": "def",
+        "4": "ghi",
+        "5": "jkl",
+        "6": "mno",
+        "7": "pqrs",
+        "8": "tuv",
+        "9": "wxyz"}
+
+        res = []
+        def helper(s, pos):
+            if pos == len(digits):
+                if s: res.append(s)
+                return
+
+            for i, v in enumerate(mapping[digits[pos]]) :
+                helper(s + v, pos + 1)
+
+        helper("", 0)
+        return res 
+```
+
+22. 括号生成
+
+https://leetcode-cn.com/problems/generate-parentheses/
+
+```python
+class Solution:
+    def generateParenthesis(self, n: int) -> List[str]:
+        # 2020.2.12
+        res = []
+
+        def helper(s: str, left: int, right: int):
+            if len(s) == n * 2: 
+                res.append(s)
+                return
+            if left < n:
+                helper(s + "(", left + 1, right)
+            if right < left:
+                helper(s + ")", left, right + 1)
+        
+        helper("", 0, 0)
+        return res
+```
+
+
+## todo
+
+https://blog.csdn.net/willshine19/article/details/48129521
+
+
+
 
 ---
 

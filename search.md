@@ -1,5 +1,7 @@
 # 回溯 backtrack
 
+[toc]
+
 ![](https://pic.leetcode-cn.com/6a464ba95a7ad1c247aa39610535984c241e6b95148f8bc36b02908a190b1d54-image.png)
 
 解题要点
@@ -23,12 +25,11 @@
 [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/) |
 [22. 括号生成](https://leetcode-cn.com/problems/generate-parentheses/) | 这是字符串问题，没有显式回溯的过程。这道题广度优先遍历也很好写，可以通过这个问题理解一下为什么回溯算法都是深度优先遍历，并且都用递归来写。
 [60. 第k个排列](https://leetcode-cn.com/problems/permutation-sequence/) | 利用了剪枝的思想，减去了大量枝叶，直接来到需要的叶子结点。
-77. 组合 | 组合问题按顺序找，就不会重复。并且举一个中等规模的例子，找到如何剪枝，这道题思想不难，难在编码。
-79. 单词搜索 |
-93. 复原IP地址 | 	
-784. 字母大小写全排列 |	
+[77. 组合](https://leetcode-cn.com/problems/combinations/) | 组合问题按顺序找，就不会重复。并且举一个中等规模的例子，找到如何剪枝，这道题思想不难，难在编码。
+[79. 单词搜索](https://leetcode-cn.com/problems/word-search/) |
+[93. 复原IP地址](https://leetcode-cn.com/problems/restore-ip-addresses/) | 	
+[784. 字母大小写全排列](https://leetcode-cn.com/problems/letter-case-permutation/) |	
 127. Word Ladder |	
-784. 字母大小写全排列 |	
 
 ## 题目
 
@@ -245,7 +246,7 @@ class Solution {
 ```
 
 
-78. 子集 Subsets
+### 78. 子集 Subsets
 
 https://leetcode-cn.com/problems/subsets/
 
@@ -359,7 +360,7 @@ class Solution {
 }
 ```
 
-90. 子集 II Subsets II
+### 90. 子集 II Subsets II
 
 https://leetcode-cn.com/problems/subsets-ii/
 
@@ -419,7 +420,7 @@ class Solution {
 }
 ```
 
-39. 组合总和
+### 39. 组合总和
 
 https://leetcode-cn.com/problems/combination-sum/submissions/
 
@@ -483,7 +484,7 @@ public class Solution {
 }
 ```
 
-40. 组合总和 II
+### 40. 组合总和 II
 
 https://leetcode-cn.com/problems/combination-sum-ii/
 
@@ -551,7 +552,7 @@ public class Solution {
 }
 ```
 
-## N-Queens
+### N-Queens
 
 51. N皇后
     
@@ -739,7 +740,7 @@ class Solution {
 };
 ```
 
-131. 分割回文串
+### 131. 分割回文串
 
 https://leetcode-cn.com/problems/palindrome-partitioning/
 
@@ -830,7 +831,7 @@ public class Solution {
 }
 ```
 
-17. 电话号码的字母组合
+### 17. 电话号码的字母组合
 
 https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/
 
@@ -860,7 +861,7 @@ class Solution:
         return res 
 ```
 
-22. 括号生成
+### 22. 括号生成
 
 https://leetcode-cn.com/problems/generate-parentheses/
 
@@ -884,6 +885,48 @@ class Solution:
 ```
 
 
+### 77. 组合
+    
+https://leetcode-cn.com/problems/combinations/
+
+### 79. 单词搜索
+
+```python
+'''
+79. 单词搜索
+https://leetcode-cn.com/problems/word-search/
+dfs
+'''
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        nr = len(board)
+        if nr == 0: return false
+        nc = len(board[0])
+        used = [[False for _ in range(nc)] for __ in range(nr)]
+        for r in range(nr):
+            for c in range(nc):
+                if self.backtrack(board, used, word, 0, r, c):
+                    return True
+        return False
+    
+    def backtrack(self, board, used, word, index, r, c) -> bool:
+        if index == len(word): return True
+        nr = len(board)
+        nc = len(board[0])
+        if r < 0 or r >= nr: return False
+        if c < 0 or c >= nc: return False
+        if used[r][c]:
+            return False
+        if board[r][c] == word[index]:
+            used[r][c] = True
+            if self.backtrack(board, used, word, index + 1, r + 1, c): return True 
+            if self.backtrack(board, used, word, index + 1, r - 1, c): return True 
+            if self.backtrack(board, used, word, index + 1, r, c + 1): return True 
+            if self.backtrack(board, used, word, index + 1, r, c - 1): return True
+        used[r][c] = False 
+        return False
+```
+
 ## todo
 
 https://blog.csdn.net/willshine19/article/details/48129521
@@ -893,9 +936,10 @@ https://blog.csdn.net/willshine19/article/details/48129521
 
 ---
 
-## 127. Word Ladder
+## 广度优先
 
-广度优先
+### 127. Word Ladder
+
 
 https://leetcode-cn.com/problems/word-ladder/
 

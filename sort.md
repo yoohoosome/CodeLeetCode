@@ -2,6 +2,12 @@
 
 [toc]
 
+
+![](https://pic.leetcode-cn.com/cde64bf682850738153e6c76dd3f6fb32201ce3c73c23415451da1eead9eb7cb-20190624173156.jpg)
+
+
+链接：https://leetcode-cn.com/problems/top-k-frequent-elements/solution/leetcode-di-347-hao-wen-ti-qian-k-ge-gao-pin-yuan-/
+
 ## 912. Sort an Array
 
 https://leetcode-cn.com/problems/sort-an-array/
@@ -105,13 +111,96 @@ def insertion_sort(nums):
 
 ### Heap Sort
 
-https://www.youtube.com/watch?v=j-DqQcNPGbE
+堆排序 处理海量数据的 `topK`，`分位数` 非常合适，
+因为它不用将所有的元素都进行排序，只需要比较和根节点的大小关系就可以了，同时也不需要一次性将所有的数据都加载到内存。
 
-heap:
+
+[黄浩杰heapsort](https://www.bilibili.com/video/av47196993?from=search&seid=773170647041705462)
+
+
+```
+ (i-1)/2
+    |
+    i
+  /   \
+2i+1  2i+2
+```
+
+数据结构 heap:
 1. complete binary tree
 1. parent > children
 
-heapify, 是一个树变成 heap
+heapify: 对一个节点做 heapify, 确保这节点 > children, 如果发生交换, 还要向下继续 heapify
+
+build heap: 对一个树的所有父节点做 heapify (从最后到最前), 根节点就是最大值(最大堆)
+
+最大堆 大根堆: 根是最大值
+最小堆 小根堆: 根是最小值 
+
+heap sort:
+
+https://www.geeksforgeeks.org/heap-sort/
+
+nlogn
+
+```python
+
+# Python program for implementation of heap Sort 
+  
+# To heapify subtree rooted at index i. 
+# n is size of heap 
+def heapify(arr, n, i): 
+    max_i = i # Initialize largest as root 
+    l = 2 * i + 1     # left = 2*i + 1 
+    r = 2 * i + 2     # right = 2*i + 2 
+  
+    # See if left child of root exists and is 
+    # greater than root 
+    if l < n and arr[i] < arr[l]: 
+        max_i = l 
+  
+    # See if right child of root exists and is 
+    # greater than root 
+    if r < n and arr[max_i] < arr[r]: 
+        max_i = r 
+  
+    # Change root, if needed 
+    if max_i != i: 
+        arr[i], arr[max_i] = arr[max_i],a rr[i] # swap 
+  
+        # Heapify the root. 
+        heapify(arr, n, max_i) 
+  
+# The main function to sort an array of given size 
+def heapSort(arr): 
+    n = len(arr) 
+  
+    # Build a maxheap. 
+    for i in range(n, -1, -1): 
+        heapify(arr, n, i) 
+  
+    # One by one find max elements 
+    for i in range(n-1, 0, -1): 
+        arr[i], arr[0] = arr[0], arr[i] # swap 
+        heapify(arr, i, 0) 
+  
+# Driver code to test above 
+arr = [ 12, 11, 13, 5, 6, 7] 
+heapSort(arr) 
+n = len(arr) 
+print ("Sorted array is") 
+for i in range(n): 
+    print ("%d" %arr[i]), 
+# This code is contributed by Mohit Kumra 
+```
+
+347. 前 K 个高频元素
+
+https://leetcode-cn.com/problems/top-k-frequent-elements/
+
+703. 数据流中的第K大元素
+
+https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/
 
 ---
 

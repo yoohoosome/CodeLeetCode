@@ -476,3 +476,82 @@ class WordDictionary:
 
 648. 单词替换
 https://leetcode-cn.com/problems/replace-words/
+
+## 2020.2.13
+
+703. 数据流中的第K大元素
+https://leetcode-cn.com/problems/kth-largest-element-in-a-stream
+
+```python
+'''
+heap
+'''
+class KthLargest:
+    def __init__(self, k: int, nums):
+        self.k = k
+        if len(nums) > k:
+            # 最大的 k 的数 
+            self.h = heapq.nlargest(k, nums)
+        else:
+            self.h = nums[:]
+        heapq.heapify(self.h)
+        # 找出最小值 放在头部
+
+    def add(self, val: int) -> int:
+        heapq.heappush(self.h, val)
+        if len(self.h) > self.k:
+            heapq.heappop(self.h)
+        return self.h[0] # k个数字中的最小值
+```
+
+347. 前 K 个高频元素
+
+https://leetcode-cn.com/problems/top-k-frequent-elements/
+
+时间复杂度：O(nlogk)，n 表示数组的长度。首先，遍历一遍数组统计元素的频率，这一系列操作的时间复杂度是 O(n)；接着，遍历用于存储元素频率的 map，如果元素的频率大于最小堆中顶部的元素，则将顶部的元素删除并将该元素加入堆中，这里维护堆的数目是 kk，所以这一系列操作的时间复杂度是 O(nlogk) 的；因此，总的时间复杂度是 O(nlog⁡k)。
+
+
+```python
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]: 
+        def heapify(arr, n, i):
+            smallest = i  # 构造根节点与左右子节点
+            l = 2 * i + 1
+            r = 2 * i + 2
+            if l < n and arr[l][1] < arr[i][1]:  # 如果左子节点在范围内且小于父节点
+                smallest = l
+            if r < n and arr[r][1] < arr[smallest][1]:
+                smallest = r
+            if smallest != i:  # 递归基:如果没有交换，退出递归
+                arr[i], arr[smallest] = arr[smallest], arr[i]
+                heapify(arr, n, smallest)  # 确保交换后，小于其左右子节点
+
+        # 哈希字典统计出现频率
+        map_dict = {}
+        for item in nums:
+            if item not in map_dict.keys():
+                map_dict[item] = 1
+            else:
+                map_dict[item] += 1
+
+        map_arr = list(map_dict.items())
+        lenth = len(map_dict.keys())
+        # 构造规模为k的minheap
+        if k <= lenth:
+            k_minheap = map_arr[:k]
+            # 从后往前建堆，避免局部符合而影响递归跳转，例:2,1,3,4,5,0
+            for i in range(k // 2 - 1, -1, -1): 
+                heapify(k_minheap, k, i)
+            # 对于k:, 大于堆顶则入堆，维护规模为k的minheap
+            for i in range(k, lenth): # 堆建好了，没有乱序，从前往后即可
+                if map_arr[i][1] > k_minheap[0][1]:
+                    k_minheap[0] = map_arr[i] # 入堆顶
+                    heapify(k_minheap, k, 0)  # 维护 minheap
+        # 如需按顺序输出，对规模为k的堆进行排序
+        # 从尾部起，依次与顶点交换再构造minheap，最小值被置于尾部
+        for i in range(k - 1, 0, -1):
+            k_minheap[i], k_minheap[0] = k_minheap[0], k_minheap[i]
+            k -= 1 # 交换后，维护的堆规模-1
+            heapify(k_minheap, k, 0)
+        return [item[0] for item in k_minheap]
+```

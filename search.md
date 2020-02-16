@@ -110,10 +110,6 @@ class Solution:
 
 ```
 
-
-
-
-
 ### 47. 全排列 II Permutations II
 
 https://leetcode-cn.com/problems/permutations-ii/
@@ -927,6 +923,58 @@ class Solution:
         return False
 ```
 
+93. 复原IP地址
+
+https://leetcode-cn.com/problems/restore-ip-addresses/
+
+```python
+'''
+本题目有几个需要注意的小 case
+'''
+class Solution:
+    def restoreIpAddresses(self, s: str) -> List[str]:
+        if not s: return []
+        res = []
+
+        def helper(lst, ava):
+            if len(lst) == 4:
+                if not ava: res.append(".".join(lst))
+                return
+            n = len(ava)
+            for i in range(n):
+                nxt = ava[:i + 1]
+                if int(nxt) > 255: break 
+                if nxt[0] == "0" and len(nxt) > 1: continue
+                helper(lst + [nxt], ava[i + 1:])
+        
+        helper([], s)
+        return res
+```
+
+784. 字母大小写全排列
+
+https://leetcode-cn.com/problems/letter-case-permutation/
+
+```python
+class Solution:
+    def letterCasePermutation(self, S: str) -> List[str]:
+        if not S: return []
+        res = []
+
+        def helper(s, pos):
+            if pos == len(S): 
+                res.append(s)
+                return
+            if S[pos].isalpha():
+                helper(s + S[pos].upper(), pos + 1)
+                helper(s + S[pos].lower(), pos + 1)
+            else:
+                helper(s + S[pos], pos + 1)
+        
+        helper("", 0)
+        return res
+```
+
 ## todo
 
 https://blog.csdn.net/willshine19/article/details/48129521
@@ -944,6 +992,14 @@ https://blog.csdn.net/willshine19/article/details/48129521
 https://leetcode-cn.com/problems/word-ladder/
 
 https://leetcode-cn.com/problems/word-ladder-ii/
+
+```
+beginWord = "hit",
+endWord = "cog",
+wordList = ["hot","dot","dog","lot","log","cog"]
+```
+
+![](https://pic.leetcode-cn.com/fc3a60e60cb7a80723feea0689c25a6f1637df8c64cfec0d70a264eee7e88254-Word_Ladder_1.png)
 
 https://blog.csdn.net/willshine19/article/details/46840853
 

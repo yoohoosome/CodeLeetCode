@@ -499,21 +499,36 @@ public class Solution {
 
 ## First Bad Version
 
-https://www.lintcode.com/problem/first-bad-version/description
+278. 第一个错误的版本
+
+https://leetcode-cn.com/problems/first-bad-version/
+
+```python
+class Solution:
+    def firstBadVersion(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if not n: return
+        if n == 1: return 1
+        start, end = 1, n
+        while start < end - 1:
+            mid = (start + end) // 2
+            if isBadVersion(mid):
+                end = mid
+            else:
+                start = mid
+        
+        if isBadVersion(start): 
+            return start
+        else: 
+            return end
+```
+
 
 ```java
-/**
- * public class VersionControl {
- *     public static boolean isBadVersion(int k);
- * }
- * you can use VersionControl.isBadVersion(k) to judge wether 
- * the kth code version is bad or not.
-*/
 class Solution {
-    /**
-     * @param n: An integers.
-     * @return: An integer which is the first bad version.
-     */
     public int findFirstBadVersion(int n) {
         // 2015-4-11 
         if (n <= 0) {

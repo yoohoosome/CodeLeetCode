@@ -75,6 +75,10 @@ Given an array nums of n integers, are there elements a, b, c in nums such that 
 
 Find **all** unique triplets in the array which gives the sum of zero.
 
+方法1
+
+DFS
+
 ```java
 public class Solution {
     public ArrayList<ArrayList<Integer>> threeSum(int[] numbers) {
@@ -107,28 +111,67 @@ public class Solution {
 }
 ```
 
+方法2
+
+
+
+思路: 
+1. 排序
+1. 遍历选择第一个数
+1. 从第一个数右边的子数组中选择第二三个数
+1. left 最左 right 最右, 若sum<0 则 left++, 如果sum >0 则right--
+
+## 16. 最接近的三数之和
+
+https://leetcode-cn.com/problems/3sum-closest/
+
 ## 136. Single Number
 
 Easy https://leetcode-cn.com/problems/single-number/
 
+![](https://pic.leetcode-cn.com/Figures/137/methods.png)
+
 Given a non-empty array of integers, every element appears **twice** except for one. Find that single one.
 
-```java
-public class Solution {
-	public int singleNumber(int[] A) {
-		// 2015-09-06 异或
-		if (A.length == 0) {
-			return 0;
-		}
- 
-		int num = A[0];
-		for(int i = 1; i < A.length; i++) {
-			num = num ^ A[i];
-		}
- 
-		return num;
-	}
-}
+```python
+'''
+map
+时间 O(n)
+'''
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        lookup = set()
+        for i in nums:
+            if i in lookup:
+                lookup.remove(i)
+            else:
+                lookup.add(i)
+        return lookup.pop()
+```
+
+```python
+'''
+求和
+时间 O(n)
+'''
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        unisum = sum(set(nums))
+        return unisum * 2 - sum(nums)
+```
+
+
+```python
+'''
+时间 O(n)
+空间 O(1)
+'''
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        xor = 0
+        for n in nums:
+            xor ^= n
+        return xor
 ```
 
 ## 137. Single Number II
@@ -137,30 +180,36 @@ Medium https://leetcode-cn.com/problems/single-number-ii/
 
 Given a non-empty array of integers, every element appears **three times** except for one, which appears exactly once. Find that single one.
 
-Version 1 模拟三进制 时间 O(n) 空间 O(1)
+方法一
 
 ```python
+'''
+map
+时间 O(n)
+'''
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
-        b1, b2 = 0, 0 # 出现一次的位，和两次的位
-        for n in nums:
-            b1 = (b1 ^ n) & ~ b2 # 既不在出现一次的b1，也不在出现两次的b2里面，我们就记录下来，出现了一次，再次出现则会抵消
-            b2 = (b2 ^ n) & ~ b1 # 既不在出现两次的b2里面，也不再出现一次的b1里面(不止一次了)，记录出现两次，第三次则会抵消
-        return b1
+        from collections import Counter
+        lookup = Counter()
+        for i in nums:
+            lookup[i] += 1
+        for k, v in lookup.items():
+            if v == 1:
+                return k
 ```
 
-Version 2 求和 时间 O(n)
+方法二
 
 ```python
+'''
+求和
+时间 O(n)
+'''
 class Solution:
     def singleNumber(self, nums: List[int]) -> int:
         set_nums = set(nums)
         return (3 * sum(set_nums) - sum(nums)) // 2
 ```
-
-
-
-Version 3 用 map, 时间 O(n)
 
 ```java
 public class Solution {
@@ -192,15 +241,58 @@ public class Solution {
 }
 ```
 
+方法三
+
+```python
+'''
+模拟三进制
+时间 O(n)
+空间 O(1)
+'''
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        b1, b2 = 0, 0 # 出现一次的位，和两次的位
+        for n in nums:
+            b1 = (b1 ^ n) & ~ b2 # 既不在出现一次的b1，也不在出现两次的b2里面，我们就记录下来，出现了一次，再次出现则会抵消
+            b2 = (b2 ^ n) & ~ b1 # 既不在出现两次的b2里面，也不再出现一次的b1里面(不止一次了)，记录出现两次，第三次则会抵消
+        return b1
+```
+
+
 ## 260. Single Number III
 
 Medium https://leetcode-cn.com/problems/single-number-iii/
 
 Given an array of numbers `nums`, in which exactly two elements appear only **once** and all the other elements appear exactly **twice**. Find the two elements that appear only once.
 
-Version 1 时间复杂度O(N) 空间复杂度O(1)
+方法一 
 
 ```python
+'''
+map
+时间 O(n)
+'''
+class Solution:
+    def singleNumber(self, nums: List[int]) -> List[int]:
+        from collections import Counter
+        lookup = Counter()
+        for i in nums:
+            lookup[i] += 1
+        ans = []
+        for k, v in lookup.items():
+            if v == 1:
+                ans.append(k)
+        return ans
+```
+
+
+方法二
+
+```python
+'''
+分成两组
+时间 O(N) 空间 O(1)
+'''
 class Solution:
     def singleNumber(self, nums: List[int]) -> List[int]:
         xor = 0;
@@ -221,13 +313,30 @@ class Solution:
         return [num1, num2]
 ```
 
-## 169. Majority Element
+## 169. 多数元素
+
+169. Majority Element
 
 Easy https://leetcode-cn.com/problems/majority-element/
 
 Given an array of size `n`, find the majority element. The majority element is the element that appears more than `⌊ n/2 ⌋` times.
 
-Versoion 1 时间 O(n) 空间 O(1)
+Version 1
+
+```python
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        from collections import Counter
+        d = Counter()
+        for i, v in enumerate(nums):
+            d[v] += 1
+        n = len(nums)
+        for k, v in d.items():
+            if v > n / 2: return k
+        return None
+```
+
+Version 2 时间 O(n) 空间 O(1)
 
 ```java
 public class Solution {
@@ -252,11 +361,30 @@ public class Solution {
 }
 ```
 
-## 229. Majority Element II
+
+## 229. 求众数 II
+
+229. Majority Element II
 
 Medium https://leetcode-cn.com/problems/majority-element-ii/
 
 Given an integer array of size n, find all elements that appear more than `⌊ n/3 ⌋` times.
+
+
+```python
+class Solution:
+    def majorityElement(self, nums: List[int]) -> List[int]:
+        from collections import Counter
+        d = Counter()
+        for i, v in enumerate(nums):
+            d[v] += 1
+        n = len(nums)
+        res = []
+        for k, v in d.items():
+            if v > n / 3: res.append(k)
+        return res
+```
+
 
 ```java
 public class Solution {
@@ -311,13 +439,15 @@ Given an array of integers and a number k, the majority number is the number tha
 
 https://blog.csdn.net/willshine19/article/details/48649743
 
-## 53. Maximum Subarray
+## 53. 最大子序和
+
+53. Maximum Subarray
 
 Easy https://leetcode-cn.com/problems/maximum-subarray/
 
 Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
 
-Version 1 时间 O(n^2)
+Version 1 时间 O(n^2) 暴力
 
 Version 2 时间 O(n) 空间 O(1)
 
@@ -343,6 +473,27 @@ public class Solution {
 }
 ```
 
+Version 3
+
+```python
+'''
+动态规划
+dp[n], dp[i] 表示以 nums[i] 为结尾的子序的最大和 或 0
+时间 O(n)
+'''
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        if not nums: return 0
+        n = len(nums)
+        dp = [0] * n
+        dp[0] = max(nums[0], 0)
+        for i in range(1, n):
+            dp[i] = max(dp[i - 1] + nums[i], 0)    
+        return max(dp) if max(dp) > 0 else max(nums)
+```
+
+
+
 ## 172. Factorial Trailing Zeroes
 
 https://leetcode-cn.com/problems/factorial-trailing-zeroes/
@@ -364,104 +515,6 @@ class Solution {
     }
 };
 ```
-
-## 121. Best Time to Buy and Sell Stock
-
-Easy https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/
-
-only one transaction
-
-```java
-public class Solution {
-    public int maxProfit(int[] prices) {
-        // 2015-09-15
-        if (prices == null || prices.length == 0) {
-            return 0;
-        }
-        
-        int minPrice = Integer.MAX_VALUE;
-        int rst = 0;
-        for (int i = 0; i < prices.length; i++) {
-            minPrice = Math.min(minPrice, prices[i]);
-            rst = Math.max(rst, prices[i] - minPrice);
-        }
-        return rst;
-    }
-}
-```
-
-## 122. Best Time to Buy and Sell Stock II
-
-Easy https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/
-
-as many transactions as you like
-
-```java
-class Solution {
-    public int maxProfit(int[] prices) {
-        // 2015-09-15
-        if (prices == null || prices.length == 0) {
-            return 0;
-        }
-        
-        int rst = 0;
-        for (int i = 1; i < prices.length; i++) {
-            int sub = prices[i] - prices[i - 1];
-            if (sub > 0) {
-                rst += sub;
-            }
-        }
-        return rst;
-    }
-};
-```
-
-## 123. Best Time to Buy and Sell Stock III
-
-Hard https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/
-
-at most two transactions
-
-```java
-class Solution {
-    public int maxProfit(int[] prices) {
-        // 2015-09-15 dp
-        if (prices == null || prices.length <= 1) {
-            return 0;
-        }
-        
-        // dp from left
-        int[] left = new int[prices.length];
-        int minPrice = Integer.MAX_VALUE;
-        left[0] = 0;
-        minPrice = prices[0];
-        for (int i = 1; i < prices.length; i++) {
-            minPrice = Math.min(minPrice, prices[i]);
-            left[i] = Math.max(left[i - 1], prices[i] - minPrice);
-        }
-        
-        // dp from right 
-        int[] right = new int[prices.length];
-        int maxPrice = Integer.MIN_VALUE;
-        right[prices.length - 1] = 0;
-        maxPrice = prices[prices.length - 1];
-        for (int i = prices.length - 2; i >= 0; i--) {
-            maxPrice = Math.max(maxPrice, prices[i]);
-            right[i] = Math.max(right[i + 1], maxPrice - prices[i]);
-        }
-        
-        int rst = 0;
-        for (int i = 0; i < prices.length; i++) {
-            rst = Math.max(rst, left[i] + right[i]);
-        }
-        return rst;
-    }
-};
-```
-
-Input: [3,3,5,0,0,3,1,4]
-left:  [0,0,2,2,2,3,3,4]
-right: [4,4,4,4,4,3,3,0]
 
 ## Subarray Sum
 
@@ -575,3 +628,258 @@ Medium https://www.lintcode.com/problem/sort-letters-by-case/
 Given a string which contains only letters. Sort it by lower case first and upper case second.
 
 https://blog.csdn.net/willshine19/article/details/48622531
+
+
+---
+
+# 滑动窗口
+
+滑动窗口题目|
+---|---
+3. 无重复字符的最长子串 |
+424. 替换后的最长重复字符 |
+209. 长度最小的子数组 |
+567. 字符串的排列 |
+76. 最小覆盖子串 |
+
+undo|
+---|---
+159. 至多包含两个不同字符的最长子串 |
+30. 串联所有单词的子串 |
+239. 滑动窗口最大值 |
+632. 最小区间 |
+727. 最小窗口子序列 |
+
+
+3. 无重复字符的最长子串
+
+https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
+
+
+```python
+'''
+思路: left right 双指针, 指向窗口的第一个元素和最后一个元素
+'''
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        if not s: return 0
+        n = len(s)
+        l = r = max_len = 0
+        lookup = set()
+
+        for r in range(n):
+            while s[r] in lookup:
+                lookup.remove(s[l])
+                l += 1
+            lookup.add(s[r])
+            max_len = max(max_len, r - l + 1)
+            
+        return max_len
+```
+
+424. 替换后的最长重复字符
+
+https://leetcode-cn.com/problems/longest-repeating-character-replacement/
+
+
+```python
+class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+        if not s: return 0
+        from collections import Counter
+        lookup = Counter() 
+        n = len(s)
+        l = r = max_len = 0
+
+        for r in range(n):
+            lookup[s[r]] += 1
+            while sum(lookup.values()) - max(lookup.values()) > k:
+                lookup[s[l]] -= 1
+                l += 1
+            max_len = max(max_len, r - l + 1)
+
+        return max_len
+```
+
+209. 长度最小的子数组
+
+https://leetcode-cn.com/problems/minimum-size-subarray-sum/
+
+```python
+'''
+2020.2.8
+时间 O(n)
+'''
+class Solution:
+    def minSubArrayLen(self, s: int, nums: List[int]) -> int:
+        if not nums: return 0
+        l = r = 0
+        n = len(nums)
+        min_len = n + 1
+        window = 0
+        
+        for r in range(n):
+            window += nums[r]
+            while window >= s:
+                min_len = min(min_len, r - l + 1)
+                window -= nums[l]
+                l += 1
+        
+        return 0 if min_len > n else min_len
+```
+
+567. 字符串的排列
+
+https://leetcode-cn.com/problems/permutation-in-string/
+
+```python
+'''
+2020.2.18
+时间 O(nm)
+'''
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        from collections import Counter
+        n1, n2 = len(s1), len(s2)
+        if n1 > n2: return False
+        c1 = Counter(s1)
+        window = Counter()
+
+        for i, v in enumerate(s2):
+            window[v] += 1
+            drop_i = i - n1
+            if drop_i >= 0:
+                drop_v = s2[drop_i]
+                window[drop_v] -= 1
+
+            for k, v in c1.items():
+                if k not in window: break
+                if v != window[k]: break
+            else:
+                return True
+        return False
+
+```
+
+76. 最小覆盖子串
+
+https://leetcode-cn.com/problems/minimum-window-substring/
+
+```python
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        if not s or not t: return ""
+        from collections import Counter
+        lookup = Counter(t)
+        window = Counter()
+
+        def containsT(w):
+            for k, v in lookup.items():
+                if k not in w: return False
+                if v > w[k]: return False
+            else:
+                return True
+
+        N = len(s)
+        ans = (N + 1, 0, 0)
+        l = r = 0
+
+        while r < N:
+            if s[r] in lookup:
+                window[s[r]] += 1
+            while containsT(window):
+                if r - l + 1 < ans[0]:
+                    ans = (r - l + 1, l, r)
+                if s[l] in lookup:
+                    window[s[l]] -= 1
+                l += 1
+            r += 1
+        if ans[0] == N + 1: return ""
+        return s[ans[1]:ans[2] + 1]
+```
+
+239. 滑动窗口最大值
+
+https://leetcode-cn.com/problems/sliding-window-maximum/
+
+
+480. 滑动窗口中位数
+
+https://leetcode-cn.com/problems/sliding-window-median/
+
+
+
+268. 缺失数字
+
+https://leetcode-cn.com/problems/missing-number/
+
+方法一
+
+map
+时间 O(n)
+空间 O(n)
+
+方法二 
+
+位运算
+时间 O(n)
+空间 O(1)
+
+```python
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        N = len(nums)
+        ans = 0
+        for num in nums:
+            ans ^= num
+        for num in range(N + 1):
+            ans ^= num
+        return ans
+```
+
+
+204. 计数质数
+
+https://leetcode-cn.com/problems/count-primes/
+
+```python
+class Solution:
+    def countPrimes(self, n: int) -> int:
+        if n < 2: return 0
+        arr = [True] * n
+        arr[0] = arr[1] = False
+        i = 2
+        while i * i < n:
+            if arr[i]:
+                j = 2
+                while i * j < n:
+                    arr[i * j] = False
+                    j += 1
+            i += 1
+        count = 0
+        for i in range(1, n):
+            if arr[i]: count += 1
+        return count
+
+```
+
+就是先先干掉2的倍数，然后干掉3的倍数，（4是2的倍数，过滤），干掉5的倍数，（6是2和3的倍数），干掉7的倍数，就这样子一路干到sqrt(n)就行了
+
+![](https://pic.leetcode-cn.com/77583e8c9a820e3880f754a00863d616642d8cf915230382c2aaa11168c25849-file_1581643684036)
+
+896. 单调数列
+
+https://leetcode-cn.com/problems/monotonic-array/
+
+```python
+class Solution:
+    def isMonotonic(self, A: List[int]) -> bool:
+        if not A or len(A) == 1: return True
+        mx = float("-inf")
+        mn = float("inf")
+        for i in range(1, len(A)):
+            diff = A[i] - A[i - 1]
+            mx = max(mx, diff)
+            mn = min(mn, diff)
+        return bool(mx * mn >= 0)
+```

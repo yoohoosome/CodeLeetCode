@@ -1,5 +1,7 @@
 ## Linked List
 
+[toc]
+
 ### 876. Middle of the Linked List
 
 https://leetcode-cn.com/problems/middle-of-the-linked-list/
@@ -15,7 +17,6 @@ class Solution:
             fast = fast.next.next
         return slow
 ```
-
 
 ### 203. Remove Linked List Elements
 
@@ -197,7 +198,6 @@ public class Solution {
 
 ### 206. Reverse Linked List
 
-https://www.lintcode.com/problem/reverse-linked-list/description
 https://leetcode-cn.com/problems/reverse-linked-list/
 
 Version 1 插入新链表
@@ -475,9 +475,11 @@ Output: 4->5->1->2->3->NULL
 易错题: 当 k 为 0 或 length 的整数倍， 不需要 rotate
 
 ```python
+'''
+2019.7.10
+'''
 class Solution:
     def rotateRight(self, head: ListNode, k: int) -> ListNode:
-        # 2019.7.10
         if not head:
             return head
         

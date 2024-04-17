@@ -9,6 +9,7 @@
 1. 画树
 1. 每个节点包括 (1) 当前解 (2) 可用元素
 
+https://leetcode-cn.com/problems/permutations/solution/hui-su-suan-fa-python-dai-ma-java-dai-ma-by-liweiw/
 
 
 题目 | 提示
@@ -987,7 +988,6 @@ https://blog.csdn.net/willshine19/article/details/48129521
 ## 广度优先
 
 ### 127. Word Ladder
-
 
 https://leetcode-cn.com/problems/word-ladder/
 

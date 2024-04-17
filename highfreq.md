@@ -1,5 +1,7 @@
 # High Frequency
 
+[toc]
+
 ## O(1) Check Power of 2
 
 https://www.lintcode.com/problem/o1-check-power-of-2/description
@@ -51,37 +53,31 @@ class Solution {
 }
 ```
 
-## 23
 
 162
 153
 
-## 24
 
 264
 204
 
-## 2020.1.25
 
 134
 738
 
-## 2020.1.26
 
 86
 15
 
-## 2020.1.27
 75.颜色分类
 https://leetcode-cn.com/problems/sort-colors/
+
 973. 最接近原点的K个数
 https://leetcode-cn.com/problems/k-closest-points-to-origin/
 
-## 2020.01.28
 22. Generate Parentheses
 51. N-Queens （选做52. N-Queens II）
 
-## 2020.1.29
 
 215 数组中第k个最大元素
 https://leetcode-cn.com/problems/kth-largest-element-in-an-array/
@@ -90,7 +86,6 @@ https://leetcode-cn.com/problems/kth-largest-element-in-an-array/
 https://leetcode-cn.com/problems/search-a-2d-matrix/
 https://leetcode-cn.com/problems/search-a-2d-matrix-ii/
 
-## 2020.1.30
 
 ```python
 '''
@@ -130,7 +125,6 @@ class Solution:
         return self.postorderTraversal(root.left) + self.postorderTraversal(root.right) + [root.val]
 ```
 
-## 2020.1.31
 
 https://leetcode-cn.com/problems/number-of-islands/
 
@@ -376,107 +370,243 @@ class Solution:
         return max(dp)
 ```
 
-## 2020.2.4
-
-```python
-'''
-208. 实现 Trie (前缀树)
-https://leetcode-cn.com/problems/implement-trie-prefix-tree/
-Trie 前缀树 字典树
-'''
-class Trie:
-
-    def __init__(self):
-        """
-        Initialize your data structure here.
-        """
-        self.root = {}
-        
-
-    def insert(self, word: str) -> None:
-        """
-        Inserts a word into the trie.
-        """
-        nxt = self.root
-        for c in word:
-            if c not in nxt:
-                nxt[c] = {}
-            nxt = nxt[c]
-        nxt["end"] = True 
-        
-
-    def search(self, word: str) -> bool:
-        """
-        Returns if the word is in the trie.
-        """
-        nxt = self.root
-        for c in word:
-            if c not in nxt: return False
-            nxt = nxt[c]
-        return "end" in nxt
-        
-        
-
-    def startsWith(self, prefix: str) -> bool:
-        """
-        Returns if there is any word in the trie that starts with the given prefix.
-        """
-        nxt = self.root
-        for c in prefix:
-            if c not in nxt: return False
-            nxt = nxt[c]
-        return True       
-```
-
-```python
-'''
-211. 添加与搜索单词 - 数据结构设计
-https://leetcode-cn.com/problems/add-and-search-word-data-structure-design/
-'''
-class WordDictionary:
-
-    def __init__(self):
-        """
-        Initialize your data structure here.
-        """
-        self.root = {}
-        
-
-    def addWord(self, word: str) -> None:
-        """
-        Adds a word into the data structure.
-        """
-        nxt = self.root
-        for c in word:
-            if c not in nxt:
-                nxt[c] = {}
-            nxt = nxt[c]
-        nxt["end"] = True
-            
-        
-
-    def search(self, word: str) -> bool:
-        """
-        Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter.
-        """
-        def searchInner(root, word):
-            nxt = root
-            for i, c in enumerate(word):
-                if c == ".":
-                    for key in nxt:
-                        if key != "end" and searchInner(nxt[key], word[i + 1:]): return True
-                    return False
-                elif c not in nxt:
-                    return False
-                nxt = nxt[c]
-            if "end" in nxt: return True
-        
-        return searchInner(self.root, word)
-```
 
 648. 单词替换
+
 https://leetcode-cn.com/problems/replace-words/
 
-## 2020.2.13
+## 2020.2.17
 
-heap
+34. 在排序数组中查找元素的第一个和最后一个位置
+
+https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+
+4. 寻找两个有序数组的中位数
+
+https://leetcode-cn.com/problems/median-of-two-sorted-arrays/
+
+
+
+
+## 2020.2.24
+
+
+20. 有效的括号
+
+https://leetcode-cn.com/problems/valid-parentheses/
+
+```python
+'''
+2020.2.24
+stack
+'''
+class Solution:
+    def isValid(self, s: str) -> bool:
+        stack = []
+        for c in s:
+            if c in "{[(": 
+                stack.append(c)
+                continue
+            if c in ")]}" and not stack: return False
+            if c == ")" and stack.pop() != "(": return False
+            if c == "]" and stack.pop() != "[": return False
+            if c == "}" and stack.pop() != "{": return False
+        return True if not stack else False
+```
+
+150. 逆波兰表达式求值
+
+https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/
+
+```python
+'''
+2020.2.24
+stack
+'''
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = list()
+        for t in tokens:
+            if t not in '+-*/':
+                stack.append(int(t))
+            else:
+                right = stack.pop()
+                left = stack.pop()
+                if t == '+':
+                    stack.append(left + right)
+                elif t == '-':
+                    stack.append(left - right)
+                elif t == '*':
+                    stack.append(left * right)
+                elif t == '/':
+                    stack.append(int(left / right))
+        # 6 // -123 = -1?
+        return stack[0]
+```
+
+https://leetcode-cn.com/problems/longest-palindromic-substring/
+
+
+5. 最长回文子串
+
+暴力 O(n3)
+
+dp O(n2)
+
+![](https://pic.leetcode-cn.com/e8c42f244ff5cb91096dfbdb70d2ccefdb88d428a111d89f4e3ac42dcd337103-image.png)
+
+
+
+
+31. 下一个排列
+
+https://leetcode-cn.com/problems/next-permutation/
+
+```python
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        def reverse(nums, left, right):
+            while left < right:
+                nums[left], nums[right] = nums[right], nums[left]
+                left += 1
+                right -= 1
+        
+        n = len(nums)
+        if n <= 1: return
+        idx = n - 2
+        while idx >= 0 and nums[idx] >= nums[idx + 1]:
+            idx -= 1
+        if idx < 0: 
+            reverse(nums, 0, n - 1)
+            return
+        left = idx
+        idx = n - 1
+        while nums[left] >= nums[idx]:
+            idx -= 1
+        right = idx
+        nums[left], nums[right] = nums[right], nums[left]
+        reverse(nums, left + 1,  n - 1)
+
+```
+49. 字母异位词分组
+
+https://leetcode-cn.com/problems/group-anagrams/
+
+```python
+class Solution:
+    def groupAnagrams(strs):
+        ans = collections.defaultdict(list)
+        for s in strs:
+            count = [0] * 26
+            for c in s:
+                count[ord(c) - ord('a')] += 1
+            ans[tuple(count)].append(s)
+        return ans.values()
+```
+
+67. 二进制求和
+
+```python
+class Solution:
+    def addBinary(self, a: str, b: str) -> str:
+        if not a or int(a) == 0: return b
+        if not b or int(b) == 0: return a
+        n1 = len(a)
+        n2 = len(b)
+        if n1 < n2:
+            a = "0" * (n2 - n1) + a
+        elif n2 < n1:
+            b = "0" * (n1 - n2) + b
+        n = max(n1, n2)
+        carry = 0
+        ans = []
+        for i in range(n - 1, -1, -1):
+            s = int(a[i]) + int(b[i]) + carry
+            carry = s // 2
+            ans = [str(s % 2)] + ans
+        if carry == 1: ans = ["1"] + ans
+        return "".join(ans)
+```
+
+647. 回文子串
+
+```python
+class Solution:
+    def countSubstrings(self, s: str) -> int:
+        n = len(s)
+        ans = 0
+        for center in range(2 * n - 1):
+            left = center // 2
+            right = left + center % 2
+            while left >= 0 and right < n and s[left] == s[right]:
+                ans += 1
+                left -= 1
+                right += 1
+        return ans
+
+```
+
+560. 和为K的子数组
+
+
+```python
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        from collections import Counter
+        ans = 0
+        s = 0
+        lookup = Counter()
+        for v in nums:
+            lookup[s] += 1
+            s += v
+            if (s - k) in lookup:
+                ans += lookup[s - k]
+        return ans
+```
+
+
+146. LRU缓存机制
+
+https://leetcode-cn.com/problems/lru-cache/
+
+225. 用队列实现栈
+
+https://leetcode-cn.com/problems/implement-stack-using-queues/
+
+```python
+class MyStack:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.t = []
+
+
+    def push(self, x: int) -> None:
+        """
+        Push element x onto stack.
+        """
+        self.t.append(x)
+
+
+    def pop(self) -> int:
+        """
+        Removes the element on top of the stack and returns that element.
+        """
+        return self.t.pop()
+
+
+    def top(self) -> int:
+        """
+        Get the top element.
+        """
+        return self.t[-1]
+
+
+    def empty(self) -> bool:
+        """
+        Returns whether the stack is empty.
+        """
+        return not bool(self.t)
+```

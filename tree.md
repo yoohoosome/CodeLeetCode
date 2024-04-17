@@ -1,8 +1,12 @@
 # Tree
 
-## 广度优先遍历 BFS
+[toc]
 
-### Binary Tree Level Order Traversal
+## 层序遍历
+
+### 102. 二叉树的层次遍历
+
+Binary Tree Level Order Traversal
 
 https://leetcode-cn.com/problems/binary-tree-level-order-traversal/
 
@@ -55,7 +59,9 @@ public class Solution {
 }
 ```
 
-### Binary Tree Level Order Traversal II
+### 107. 二叉树的层次遍历 II
+
+Binary Tree Level Order Traversal II
 
 https://leetcode-cn.com/problems/binary-tree-level-order-traversal-ii/
 
@@ -108,7 +114,9 @@ public class Solution {
 }
 ```
 
-### Binary Tree Zigzag Level Order Traversal
+### 103. 二叉树的锯齿形层次遍历
+
+Binary Tree Zigzag Level Order Traversal
 
 https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/
 
@@ -148,6 +156,29 @@ public class Solution {
         return rst;
     }
 }
+```
+
+
+### 515. 在每个树行中找最大值
+
+https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/
+
+```python
+class Solution:
+    def largestValues(self, root: TreeNode) -> List[int]:
+        res = []
+        row = []
+        if root: row.append(root)
+        while row:
+            mx = row[0].val
+            n = len(row)
+            for i in range(n):
+                node = row.pop(0)
+                mx = max(mx, node.val)
+                if node.left: row.append(node.left)
+                if node.right: row.append(node.right)
+            res.append(mx)
+        return res
 ```
 
 ---
@@ -361,7 +392,9 @@ public class Solution {
 }
 ```
 
-## Lowest Common Ancestor
+## 236. 二叉树的最近公共祖先
+
+Lowest Common Ancestor
 
 https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/
 
@@ -415,7 +448,7 @@ public class Solution {
 }
 ```
 
-### Construct Binary Tree from Preorder and Inorder Traversal
+## Construct Binary Tree from Preorder and Inorder Traversal
 
 https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
 
@@ -867,4 +900,105 @@ public class Solution {
         return -1;
     }
 }
+```
+
+
+## 437. 路径总和 III
+
+https://leetcode-cn.com/problems/path-sum-iii/
+
+## 114. 二叉树展开为链表
+
+https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/
+
+```python
+class Solution:
+    def flatten(self, root: TreeNode) -> None:
+        if not root: return
+        if root.left: self.flatten(root.left)
+        if root.right: self.flatten(root.right)
+        if not root.left: return
+
+        root.left, root.right = root.right, root.left
+        if not root.left: return
+        head = root
+        while head.right: 
+            head = head.right
+        head.right, root.left = root.left, head.right
+```
+
+## 543. 二叉树的直径
+
+https://leetcode-cn.com/problems/diameter-of-binary-tree/
+
+```python
+class Solution:
+    def diameterOfBinaryTree(self, root: TreeNode) -> int:
+        self.ans = 0
+        def depth(r):
+            if not r: return 0
+            left = depth(r.left)
+            right = depth(r.right)
+            self.ans = max(self.ans, left + right + 1)
+            return max(left, right) + 1
+        depth(root)
+        return self.ans - 1
+```
+
+## 814. 二叉树剪枝
+
+https://leetcode-cn.com/problems/binary-tree-pruning/
+
+```python
+class Solution:
+    def pruneTree(self, root: TreeNode) -> TreeNode:
+        if not root: return root
+        root.left = self.pruneTree(root.left)
+        root.right = self.pruneTree(root.right)
+        if not root.left and not root.right and root.val == 0: 
+            return None
+        return root
+```
+
+
+## 98. 验证二叉搜索树
+
+https://leetcode-cn.com/problems/validate-binary-search-tree/
+
+```python
+class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+        def minMax(root):
+            if not root: return []
+            left = minMax(root.left)
+            right = minMax(root.right)
+            if left == None or right == None: return None
+            ans = []
+            if left:
+                if left[-1] >= root.val: return None
+                else: ans.append(left[0])
+            else: 
+                ans.append(root.val)
+            if right:
+                if right[0] <= root.val: return None
+                else: ans.append(right[-1])
+            else:
+                ans.append(root.val)
+            return ans
+        return bool(minMax(root) != None)
+```
+
+## 101. 对称二叉树
+
+https://leetcode-cn.com/problems/symmetric-tree/
+
+```python
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        if not root: return True
+        def isMirror(left, right):
+            if not left and not right: return True
+            if not left or not right: return False
+            return bool(left.val == right.val and isMirror(left.left, right.right) and isMirror(left.right, right.left))
+        return isMirror(root.left, root.right)
 ```

@@ -394,6 +394,41 @@ public class Solution {
 }
 ```
 
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun insertionSortList(head: ListNode?): ListNode? {
+        if (head == null) return head
+
+        val dummy = ListNode(0)
+        var h = head
+        while (h != null) {
+            // find insert position
+            var position = dummy
+            while (position.next != null && position.next.`val` < h.`val`) {
+                position = position.next
+            }
+
+            val temp = h
+            h = h.next
+            temp.next = position.next
+            position.next = temp
+        }
+
+        return dummy.next
+    }
+}
+```
+
 ## 283. Move Zeroes
 
 https://leetcode-cn.com/problems/move-zeroes/
@@ -438,11 +473,56 @@ class Solution:
             nums[pos] = 0; pos += 1
 ```
 
+
+```kotlin
+class Solution {
+    fun moveZeroes(nums: IntArray): Unit {
+        var i = 0
+        for (value in nums) {
+            if (value != 0) {
+                nums[i] = value
+                i++
+            }
+        }
+        while (i < nums.size) {
+            nums[i] = 0
+            i++
+        }
+    }
+}
+```
+
+Version 3
+
+多用一个数组
+```kotlin
+class Solution {
+    fun moveZeroes(nums: IntArray): Unit {
+        var copy = IntArray(nums.size)
+
+        var i = 0
+        for (value in nums) {
+            if (value != 0) {
+                copy[i] = value
+                i++
+            }
+        }
+        i = 0
+        while (i < nums.size) {
+            nums[i] = copy[i]
+            i++
+        }
+    }
+}
+```
+
 ## 75. Sort Colors
 
 medium https://leetcode-cn.com/problems/sort-colors/
 
-Version 1 O(n) 遍历两次
+Version 1 记录各颜色的个数
+
+O(n) 遍历两次
 
 ```java
 class Solution {
@@ -479,7 +559,45 @@ class Solution {
 }
 ```
 
-Version 2 遍历1次
+```kotlin
+class Solution {
+    fun sortColors(nums: IntArray): Unit {
+        var color0 = 0
+        var color1 = 0
+        var color2 = 0
+
+        for (num in nums) {
+            if (num == 0) {
+                color0++
+            } else if (num == 1) {
+                color1++
+            } else {
+                color2++
+            }
+        }
+        var i = 0
+        while (color0 > 0) {
+            nums[i] = 0
+            color0--
+            i++
+        }
+        while (color1 > 0) {
+            nums[i] = 1
+            color1--
+            i++
+        }
+        while (color2 > 0) {
+            nums[i] = 2
+            color2--
+            i++
+        }
+    }
+}
+```
+
+Version 2 
+
+遍历1次
 
 ```java
 class Solution {
@@ -488,20 +606,20 @@ class Solution {
         if(nums == null || nums.length <= 1)
             return;
         
-        // pl 指向0后一个数
+        // pl 从左边找，第一个非0
         int pl = 0;
-        // pr 指向2前一个数
+        // pr 从右找，第一个非2
         int pr = nums.length - 1;
         int i = 0;
-        while(i <= pr){
-            if(nums[i] == 0){
+        while (i <= pr) {
+            if (nums[i] == 0) {
                 // 遇到0 换到前面
                 swap(nums, pl, i);
                 pl++;
                 i++;
-            }else if(nums[i] == 1){
+            } else if (nums[i] == 1) {
                 i++;
-            }else{
+            } else {
                 // 遇到2 换到后面
                 swap(nums, pr, i);
                 pr--;

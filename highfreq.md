@@ -564,11 +564,6 @@ class Solution:
         return ans
 ```
 
-
-146. LRU缓存机制
-
-https://leetcode-cn.com/problems/lru-cache/
-
 225. 用队列实现栈
 
 https://leetcode-cn.com/problems/implement-stack-using-queues/

@@ -434,3 +434,37 @@ IjkPlayer 原理
 集成了 MediaPlayer、ExoPlayer 和 IjkPlayer 三种实现，其中 IjkPlayer 基于 FFmpeg 的 ffplay
 
 音频输出方式：AudioTrack、OpenSL ES；视频输出方式：NativeWindow、OpenGL ES
+
+
+--- 
+
+# kotlin 刷题
+
+
+for loop
+
+```kotlin
+for (item in collection) print(item)
+
+for (i in 1..3) {
+    println(i)
+}
+for (i in 6 downTo 0 step 2) {
+    println(i)
+}
+for (i in array.indices) {
+    println(array[i])
+}
+for ((index, value) in array.withIndex()) {
+    println("the element at $index is $value")
+}
+``` 
+
+IntArray
+
+```
+val nums = IntArray(10)
+nums[1] = 2
+nums.size
+```
+

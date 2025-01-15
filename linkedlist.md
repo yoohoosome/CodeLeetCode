@@ -2,6 +2,507 @@
 
 [toc]
 
+### 160 相交链表
+
+https://leetcode.cn/problems/intersection-of-two-linked-lists/description/?envType=study-plan-v2&envId=top-100-liked
+
+
+
+### 206 反转链表 Reverse Linked List
+
+https://leetcode-cn.com/problems/reverse-linked-list/
+
+Version 1 插入新链表
+
+```python
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        // 2019.7.7
+        if not head or not head.next:
+            return head
+        
+        dummy = ListNode(0)
+        while head:
+            temp = head
+            head = head.next
+            temp.next = dummy.next
+            dummy.next = temp
+        
+        return dummy.next
+```
+
+```java
+public class Solution {
+    public ListNode reverse(ListNode head) {
+        // 2015-08-26 
+        if (head == null) {
+            return head;
+        }
+        ListNode dummy = new ListNode(0);
+        // dummy.next = head; 一定不能有
+        ListNode temp;
+        while (head != null) {
+            // 把下一个节点先保存起来
+            temp = head.next; 
+            // 插入到dummy后面 不要理解为交换位置
+            head.next = dummy.next;
+            dummy.next  = head;
+            // 指向下一节点
+            head = temp;
+        }
+        return dummy.next;
+    }
+}
+```
+
+Version 2
+
+```python
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        // 2019.7.7 修改相邻位置的指针
+        if not head or not head.next:
+            return head
+        
+        left = head
+        right = head.next
+        left.next = None
+        while right:
+            head = right
+            right = right.next
+            head.next = left
+            left = head
+        return head
+            
+```
+
+### 234 回文链表
+
+https://leetcode.cn/problems/palindrome-linked-list/?envType=study-plan-v2&envId=top-100-liked
+
+
+
+### 141 环形链表 Linked List Cycle
+
+https://leetcode-cn.com/problems/linked-list-cycle/
+
+
+```java
+public class Solution {
+    public boolean hasCycle(ListNode head) {  
+        // 2015-04-26
+        if (head == null) {
+            return false;
+        }
+        ListNode fast = head, slow = head;
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+ 
+```
+
+### 142 环形链表 II
+
+https://leetcode.cn/problems/linked-list-cycle-ii/?envType=study-plan-v2&envId=top-100-liked
+
+看不懂，有没有笨的方法？
+
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {  
+        // 2015-5-31 实在想不到
+        if (head == null || head.next == null) {
+            return null;
+        }
+ 
+        ListNode fast, slow;
+        fast = head.next;
+        slow = head;
+        while (fast != slow) {
+            if(fast == null || fast.next == null)
+                return null;
+            fast = fast.next.next;
+            slow = slow.next;
+        } 
+        
+        while (head != slow.next) {
+            head = head.next;
+            slow = slow.next;
+        }
+        return head;
+    }
+}
+```
+
+### 21 合并两个有序链表 Merge Two Sorted Lists
+
+https://leetcode-cn.com/problems/merge-two-sorted-lists/
+
+```python
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        if not l1:
+            return l2
+        if not l2:
+            return l1
+        
+        head = None
+        if l1.val < l2.val:
+            head = l1
+            l1 = l1.next
+        else:
+            head = l2
+            l2 = l2.next
+        
+        this_node = head
+        while l1 and l2:
+            if l1.val < l2.val:
+                this_node.next = l1
+                this_node = l1
+                l1 = l1.next
+            else:
+                this_node.next = l2
+                this_node = l2
+                l2 = l2.next
+        
+        if l1:
+            this_node.next = l1
+        
+        if l2:
+            this_node.next = l2
+        return head
+```
+
+
+### 2 两数相加 Add Two Numbers
+
+https://www.lintcode.com/problem/add-two-numbers/description
+
+https://leetcode-cn.com/problems/add-two-numbers/
+
+The digits are stored **in reverse order**
+
+(2 -> 4 -> 3) 表示 342
+
+```java
+public class Solution {
+    /**
+     * @param l1: the first list
+     * @param l2: the second list
+     * @return: the sum list of l1 and l2 
+     */
+    public ListNode addLists(ListNode l1, ListNode l2) {
+        // 2015-08-28
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+        
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        int carry = 0; // 进位
+        
+        while (l1 != null && l2 != null) {
+            int sum = l1.val + l2.val + carry;
+            carry = sum / 10;
+            tail.next = new ListNode(sum % 10);
+            l1 = l1.next;
+            l2 = l2.next;
+            tail = tail.next;
+        }
+        
+        while (l1 != null) {
+            int sum = l1.val + carry;
+            carry = sum / 10;
+            tail.next = new ListNode(sum % 10);
+            l1 = l1.next;
+            tail = tail.next;
+        }
+        
+        while (l2 != null) {
+            int sum = l2.val + carry;
+            carry = sum / 10;
+            tail.next = new ListNode(sum % 10);
+            l2 = l2.next;
+            tail = tail.next;
+        }
+        
+        if (carry != 0) {
+            tail.next = new ListNode(carry);
+        }
+        
+        return dummy.next;
+    }
+}
+```
+
+### 19 删除链表的倒数第 N 个结点 Remove Nth Node From End of List
+
+https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/
+
+快慢指针
+
+```python
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        # 2019.7.8
+        dummy = ListNode(0)
+        dummy.next = head
+        fast = head
+        slow = dummy
+        for i in range(n):
+            fast = fast.next
+        while fast:
+            fast = fast.next
+            slow = slow.next
+        slow.next = slow.next.next
+        return dummy.next
+```
+
+```java
+public class Solution {
+    ListNode removeNthFromEnd(ListNode head, int n) {
+        // 2015-04-29 O(n)
+        if (head == null) {
+            return null;
+        }
+        ListNode dummy = new ListNode(0);
+        dummy.next = head; //被删除的节点可能是头节点，所以要用dummy
+        head = dummy;
+        ListNode nthNode = dummy;
+        for (int i = 0; i < n; i++) {
+            nthNode = nthNode.next;
+            if (nthNode == null) {
+                return null;
+            }
+        }
+        while (nthNode.next != null) {
+            head = head.next;
+            nthNode = nthNode.next;
+        }
+        // 删掉head的下一个节点
+        head.next = head.next.next;
+        return dummy.next;
+    }
+}
+ 
+```
+
+### 146 LRU缓存机制
+
+https://leetcode-cn.com/problems/lru-cache/
+
+![](https://pic.leetcode-cn.com/815038bb44b7f15f1f32f31d40e75c250cec3c5c42b95175ec012c00a0243833-146-1.png)
+
+哈希表 + 双向链表
+
+private:
+addHead(node)
+remove(node)
+popTail()
+
+public:
+get: remove + add
+put: remove + add or add + pop
+
+接口
+
+```java
+class LRUCache {
+
+    public LRUCache(int capacity) {
+        
+    }
+    
+    public int get(int key) {
+        
+    }
+    
+    public void put(int key, int value) {
+        
+    }
+}
+
+```
+
+解法
+
+```java
+
+public class LRUCache {
+    class DLinkedNode {
+        int key;
+        int value;
+        DLinkedNode prev;
+        DLinkedNode next;
+        public DLinkedNode() {}
+        public DLinkedNode(int _key, int _value) {key = _key; value = _value;}
+    }
+
+    private Map<Integer, DLinkedNode> cache = new HashMap<Integer, DLinkedNode>();
+    private int size;
+    private int capacity;
+    private DLinkedNode head, tail;
+
+    public LRUCache(int capacity) {
+        this.size = 0;
+        this.capacity = capacity;
+        // 使用伪头部和伪尾部节点
+        head = new DLinkedNode();
+        tail = new DLinkedNode();
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    public int get(int key) {
+        DLinkedNode node = cache.get(key);
+        if (node == null) {
+            return -1;
+        }
+        // 如果 key 存在，先通过哈希表定位，再移到头部
+        moveToHead(node);
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        DLinkedNode node = cache.get(key);
+        if (node == null) {
+            // 如果 key 不存在，创建一个新的节点
+            DLinkedNode newNode = new DLinkedNode(key, value);
+            // 添加进哈希表
+            cache.put(key, newNode);
+            // 添加至双向链表的头部
+            addToHead(newNode);
+            ++size;
+            if (size > capacity) {
+                // 如果超出容量，删除双向链表的尾部节点
+                DLinkedNode tail = removeTail();
+                // 删除哈希表中对应的项
+                cache.remove(tail.key);
+                --size;
+            }
+        }
+        else {
+            // 如果 key 存在，先通过哈希表定位，再修改 value，并移到头部
+            node.value = value;
+            moveToHead(node);
+        }
+    }
+
+    private void addToHead(DLinkedNode node) {
+        node.prev = head;
+        node.next = head.next;
+        head.next.prev = node;
+        head.next = node;
+    }
+
+    private void removeNode(DLinkedNode node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    private void moveToHead(DLinkedNode node) {
+        removeNode(node);
+        addToHead(node);
+    }
+
+    private DLinkedNode removeTail() {
+        DLinkedNode res = tail.prev;
+        removeNode(res);
+        return res;
+    }
+}
+
+作者：力扣官方题解
+链接：https://leetcode.cn/problems/lru-cache/solutions/259678/lruhuan-cun-ji-zhi-by-leetcode-solution/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
+```python
+class DLinkedNode(): 
+    def __init__(self):
+        self.key = 0
+        self.value = 0
+        self.prev = None
+        self.next = None
+
+class LRUCache():
+    def add_head(self, node):
+        node.prev = self.head
+        node.next = self.head.next
+
+        self.head.next.prev = node
+        self.head.next = node
+
+    def remove(self, node):
+        prev = node.prev
+        new = node.next
+
+        prev.next = new
+        new.prev = prev
+
+
+    def pop_tail(self):
+        res = self.tail.prev
+        self.remove(res)
+        return res
+
+    def __init__(self, capacity):
+        self.cache = {}
+        self.size = 0
+        self.capacity = capacity
+        self.head, self.tail = DLinkedNode(), DLinkedNode()
+
+        self.head.next = self.tail
+        self.tail.prev = self.head
+        
+
+    def get(self, key):
+        node = self.cache.get(key, None)
+        if not node:
+            return -1
+
+        # move the accessed node to the head;
+        self.remove(node)
+        self.add_head(node)
+
+        return node.value
+
+    def put(self, key, value):
+        node = self.cache.get(key)
+
+        if not node: 
+            newNode = DLinkedNode()
+            newNode.key = key
+            newNode.value = value
+
+            self.cache[key] = newNode
+            self.add_head(newNode)
+
+            self.size += 1
+
+            if self.size > self.capacity:
+                # pop the tail
+                tail = self.pop_tail()
+                del self.cache[tail.key]
+                self.size -= 1
+        else:
+            # update the value.
+            node.value = value
+            self.remove(node)
+            self.add_head(node)
+```
+
 ### 876. Middle of the Linked List
 
 https://leetcode-cn.com/problems/middle-of-the-linked-list/
@@ -196,73 +697,6 @@ public class Solution {
  
 ```
 
-### 206. Reverse Linked List
-
-https://leetcode-cn.com/problems/reverse-linked-list/
-
-Version 1 插入新链表
-
-```python
-class Solution:
-    def reverseList(self, head: ListNode) -> ListNode:
-        // 2019.7.7
-        if not head or not head.next:
-            return head
-        
-        dummy = ListNode(0)
-        while head:
-            temp = head
-            head = head.next
-            temp.next = dummy.next
-            dummy.next = temp
-        
-        return dummy.next
-```
-
-```java
-public class Solution {
-    public ListNode reverse(ListNode head) {
-        // 2015-08-26 
-        if (head == null) {
-            return head;
-        }
-        ListNode dummy = new ListNode(0);
-        // dummy.next = head; 一定不能有
-        ListNode temp;
-        while (head != null) {
-            // 把下一个节点先保存起来
-            temp = head.next; 
-            // 插入到dummy后面 不要理解为交换位置
-            head.next = dummy.next;
-            dummy.next  = head;
-            // 指向下一节点
-            head = temp;
-        }
-        return dummy.next;
-    }
-}
-```
-
-Version 2
-
-```python
-class Solution:
-    def reverseList(self, head: ListNode) -> ListNode:
-        // 2019.7.7 修改相邻位置的指针
-        if not head or not head.next:
-            return head
-        
-        left = head
-        right = head.next
-        left.next = None
-        while right:
-            head = right
-            right = right.next
-            head.next = left
-            left = head
-        return head
-            
-```
 
 ### 92. Reverse Linked List II
 
@@ -342,44 +776,6 @@ class Solution:
             return head
 ```
 
-### 21. Merge Two Sorted Lists
-
-https://leetcode-cn.com/problems/merge-two-sorted-lists/
-
-```python
-class Solution:
-    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
-        if not l1:
-            return l2
-        if not l2:
-            return l1
-        
-        head = None
-        if l1.val < l2.val:
-            head = l1
-            l1 = l1.next
-        else:
-            head = l2
-            l2 = l2.next
-        
-        this_node = head
-        while l1 and l2:
-            if l1.val < l2.val:
-                this_node.next = l1
-                this_node = l1
-                l1 = l1.next
-            else:
-                this_node.next = l2
-                this_node = l2
-                l2 = l2.next
-        
-        if l1:
-            this_node.next = l1
-        
-        if l2:
-            this_node.next = l2
-        return head
-```
 
 ### Nth to Last Node in List
 
@@ -410,57 +806,6 @@ public class Solution {
 }
 ```
 
-### 19. Remove Nth Node From End of List
-
-https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/
-
-快慢指针
-
-```python
-class Solution:
-    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
-        # 2019.7.8
-        dummy = ListNode(0)
-        dummy.next = head
-        fast = head
-        slow = dummy
-        for i in range(n):
-            fast = fast.next
-        while fast:
-            fast = fast.next
-            slow = slow.next
-        slow.next = slow.next.next
-        return dummy.next
-```
-
-```java
-public class Solution {
-    ListNode removeNthFromEnd(ListNode head, int n) {
-        // 2015-04-29 O(n)
-        if (head == null) {
-            return null;
-        }
-        ListNode dummy = new ListNode(0);
-        dummy.next = head; //被删除的节点可能是头节点，所以要用dummy
-        head = dummy;
-        ListNode nthNode = dummy;
-        for (int i = 0; i < n; i++) {
-            nthNode = nthNode.next;
-            if (nthNode == null) {
-                return null;
-            }
-        }
-        while (nthNode.next != null) {
-            head = head.next;
-            nthNode = nthNode.next;
-        }
-        // 删掉head的下一个节点
-        head.next = head.next.next;
-        return dummy.next;
-    }
-}
- 
-```
 
 
 ### 61. Rotate List
@@ -612,136 +957,12 @@ public class Solution {
  
 ```
 
-### Add Two Numbers
-
-https://www.lintcode.com/problem/add-two-numbers/description
-
-https://leetcode-cn.com/problems/add-two-numbers/
-
-The digits are stored **in reverse order**
-
-(2 -> 4 -> 3) 表示 342
-
-```java
-public class Solution {
-    /**
-     * @param l1: the first list
-     * @param l2: the second list
-     * @return: the sum list of l1 and l2 
-     */
-    public ListNode addLists(ListNode l1, ListNode l2) {
-        // 2015-08-28
-        if (l1 == null) {
-            return l2;
-        }
-        if (l2 == null) {
-            return l1;
-        }
-        
-        ListNode dummy = new ListNode(0);
-        ListNode tail = dummy;
-        int carry = 0; // 进位
-        
-        while (l1 != null && l2 != null) {
-            int sum = l1.val + l2.val + carry;
-            carry = sum / 10;
-            tail.next = new ListNode(sum % 10);
-            l1 = l1.next;
-            l2 = l2.next;
-            tail = tail.next;
-        }
-        
-        while (l1 != null) {
-            int sum = l1.val + carry;
-            carry = sum / 10;
-            tail.next = new ListNode(sum % 10);
-            l1 = l1.next;
-            tail = tail.next;
-        }
-        
-        while (l2 != null) {
-            int sum = l2.val + carry;
-            carry = sum / 10;
-            tail.next = new ListNode(sum % 10);
-            l2 = l2.next;
-            tail = tail.next;
-        }
-        
-        if (carry != 0) {
-            tail.next = new ListNode(carry);
-        }
-        
-        return dummy.next;
-    }
-}
-```
 
 ### Add Two Numbers II
 
 https://leetcode-cn.com/problems/add-two-numbers-ii/
 
 (5 -> 6 -> 4) 表示 564
-
-### 141. Linked List Cycle
-
-https://www.lintcode.com/problem/linked-list-cycle/
-
-https://leetcode-cn.com/problems/linked-list-cycle/
-
-Given a linked list, determine if it has a cycle in it.
-
-```java
-public class Solution {
-    public boolean hasCycle(ListNode head) {  
-        // 2015-04-26
-        if (head == null) {
-            return false;
-        }
-        ListNode fast = head, slow = head;
-        while (fast.next != null && fast.next.next != null) {
-            fast = fast.next.next;
-            slow = slow.next;
-            if (fast == slow) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
- 
-```
-
-### Linked List Cycle II HARD
-
-https://www.lintcode.com/problem/linked-list-cycle-ii/description
-
-```java
-public class Solution {
-    public ListNode detectCycle(ListNode head) {  
-        // 2015-5-31 实在想不到
-        if (head == null || head.next == null) {
-            return null;
-        }
- 
-        ListNode fast, slow;
-        fast = head.next;
-        slow = head;
-        while (fast != slow) {
-            if(fast == null || fast.next == null)
-                return null;
-            fast = fast.next.next;
-            slow = slow.next;
-        } 
-        
-        while (head != slow.next) {
-            head = head.next;
-            slow = slow.next;
-        }
-        return head;
-    }
-}
- 
-```
 
 ### Copy List with Random Pointer
 
